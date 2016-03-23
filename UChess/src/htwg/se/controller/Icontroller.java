@@ -7,6 +7,7 @@ import htwg.util.Point;
 public interface Icontroller extends IObservable{
 	public Field[][] getField();
 	public String getStatusMessage();
+	public void storeGameField();
 	public void move(Point start, Point goal);
 	public void reset();
 	public boolean checkWin();

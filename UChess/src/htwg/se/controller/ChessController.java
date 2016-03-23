@@ -25,6 +25,10 @@ public class ChessController extends Observable implements Icontroller {
 		return "white";
 	}
 
+	public void storeGameField() {
+
+	}
+
 	public void move(Point start, Point goal) {
 		if (checkTurn(start)) {
 			if (gamefield.moveCheck(start, goal)) {
