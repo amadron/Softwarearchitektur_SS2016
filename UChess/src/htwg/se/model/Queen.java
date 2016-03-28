@@ -136,7 +136,7 @@ public class Queen extends Chesspiece {
 
 	private void leftUpDiagonal(int x) {
 		int n = 0;
-		for (int i = x; i >= x; i--) {
+		for (int i = this.x; i >= x; i--) {
 			validMovesList.add(new Point(this.x - n, this.y + n));
 			n++;
 		}
