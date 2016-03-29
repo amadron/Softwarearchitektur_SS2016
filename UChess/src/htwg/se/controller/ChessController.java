@@ -1,5 +1,10 @@
 package htwg.se.controller;
 
+import com.db4o.Db4o;
+import com.db4o.Db4oEmbedded;
+import com.db4o.ObjectContainer;
+import com.db4o.ObjectSet;
+import com.db4o.query.Query;
 import com.google.inject.Inject;
 
 import htwg.se.model.*;
@@ -8,6 +13,8 @@ import htwg.util.*;
 public class ChessController extends Observable implements Icontroller {
 	private GameField gamefield;
 	private boolean blackturn;
+	private ObjectContainer db = Db4oEmbedded.openFile(Db4oEmbedded.newConfiguration(), "Gamefield.db");
+
 
 	@Inject
 	public ChessController(GameField gamefield) {
@@ -26,7 +33,22 @@ public class ChessController extends Observable implements Icontroller {
 	}
 
 	public void storeGameField() {
+			
+		try {
+			db.store(gamefield);
+		} finally {
+			db.close();
+		}
+	
+	}
+	
 
+	public void retrieveGameField() {
+//		ObjectContainer dataBase = Db4o.openFile("Gamefield.db");
+//		
+//		Query query = dataBase.query();
+//		ObjectSet<GameField> gamefields = query.execute();
+//			gamefield.setField(gamefields.get(0));
 	}
 
 	public void move(Point start, Point goal) {
@@ -77,4 +99,6 @@ public class ChessController extends Observable implements Icontroller {
 		}
 		return "NONE";
 	}
+
+
 }

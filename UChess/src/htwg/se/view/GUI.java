@@ -49,6 +49,9 @@ public class GUI implements UI, IObserver, ActionListener {
 	JButton buttonExit = new JButton("Beenden");
 	JButton buttonReset = new JButton("neustart");
 	
+	JButton buttonStore = new JButton("Store");
+	JButton buttonRetrieve = new JButton("retrieve");
+	
 	
 	public GUI(Icontroller cc) {
 
@@ -76,8 +79,15 @@ public class GUI implements UI, IObserver, ActionListener {
 		
 		initField();
 		drawField();
+		
+		panelScore.add(buttonStore);
+		panelGameField.add(buttonRetrieve);
+		
 		meinFrame.setVisible(true);
 		meinFrame.repaint();
+		
+		
+		
 
 	}
 
@@ -114,7 +124,8 @@ public class GUI implements UI, IObserver, ActionListener {
 			}
 		}
 		
-		
+		buttonStore.addActionListener(this);
+		buttonRetrieve.addActionListener(this);
 		message(controller.getStatusMessage());
 	}
 
@@ -162,10 +173,27 @@ public class GUI implements UI, IObserver, ActionListener {
 	        else if(e.getSource() == this.buttonExit){
 	           System.exit(0);
 	        }
+	        else if(e.getSource() == this.buttonStore){
+	        	System.out.println("store");
+	        	controller.storeGameField();
+	        }
+	        else if(e.getSource() == this.buttonRetrieve){
+	        	System.out.println("retrieve");
+	        	controller.retrieveGameField();
+	        }
 		
+		  
+		  if(e.getSource() == this.buttonStore || e.getSource() == this.buttonRetrieve){  
+			  return;
+		  }
+		  
 		Object o = e.getSource();
 		ChessButton cbutton = (ChessButton) o;	
 		pressed(cbutton.getFieldX(), cbutton.getFieldY());
+		
+		
+	    
+		
 	}
 	
 	public void winner() {
@@ -225,4 +253,6 @@ public class GUI implements UI, IObserver, ActionListener {
 
 	}
 
-}
+}	
+	     
+		
