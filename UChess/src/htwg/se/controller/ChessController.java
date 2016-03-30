@@ -8,13 +8,13 @@ import com.db4o.query.Query;
 import com.google.inject.Inject;
 
 import htwg.se.model.*;
+import htwg.se.presistence.IDataAccessObject;
 import htwg.util.*;
 
 public class ChessController extends Observable implements Icontroller {
 	private GameField gamefield;
 	private boolean blackturn;
-	private ObjectContainer db = Db4oEmbedded.openFile(Db4oEmbedded.newConfiguration(), "Gamefield.db");
-
+	private IDataAccessObject database;
 
 	@Inject
 	public ChessController(GameField gamefield) {
@@ -35,9 +35,9 @@ public class ChessController extends Observable implements Icontroller {
 	public void storeGameField() {
 			
 		try {
-			db.store(gamefield);
+			database.create(gamefield);
 		} finally {
-			db.close();
+			database.update(gamefield);
 		}
 	
 	}

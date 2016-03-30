@@ -80,8 +80,8 @@ public class GUI implements UI, IObserver, ActionListener {
 		initField();
 		drawField();
 		
-		panelScore.add(buttonStore);
-		panelGameField.add(buttonRetrieve);
+		//panelScore.add(buttonStore);
+		//panelGameField.add(buttonRetrieve);
 		
 		meinFrame.setVisible(true);
 		meinFrame.repaint();
@@ -124,8 +124,8 @@ public class GUI implements UI, IObserver, ActionListener {
 			}
 		}
 		
-		buttonStore.addActionListener(this);
-		buttonRetrieve.addActionListener(this);
+		//buttonStore.addActionListener(this);
+		//buttonRetrieve.addActionListener(this);
 		message(controller.getStatusMessage());
 	}
 
