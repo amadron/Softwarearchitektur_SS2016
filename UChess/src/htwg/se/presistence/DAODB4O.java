@@ -12,6 +12,7 @@ public class DAODB4O implements IDataAccessObject {
 
     private ObjectContainer openDb(){
         ObjectContainer db = Db4oEmbedded.openFile(Db4oEmbedded.newConfiguration(), dbName);
+        return db;
     }
 
     @Override
@@ -32,6 +33,7 @@ public class DAODB4O implements IDataAccessObject {
         } finally {
             db.close();
         }
+        return null;
     }
 
     @Override
