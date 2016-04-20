@@ -5,6 +5,21 @@ package htwg.se.presistence;
  */
 public class DAOCouchDB implements IDataAccessObject{
 
+    private CouchDbConnector db = null;
+
+    public DAOCouchDB() {
+        HttpClient client = null;
+        try {
+            client = new StdHttpClient.Builder().url(
+                    "http://lenny2.in.htwg-konstanz.de:5984").build();
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        CouchDbInstance dbInstance = new StdCouchDbInstance(client);
+        db = dbInstance.createConnector("sudoku_db", true);
+    }
+
     @Override
     public void create(Object object) {
 
