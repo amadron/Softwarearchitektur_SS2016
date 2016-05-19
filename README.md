@@ -9,7 +9,7 @@ Dr. Prof. Marko Boger
 ### - 3. Users of the Product ###
 In eigener Sache
 ### - 4. Legal Requirements ###
-- Dieses Projekt ist als *Open Source* Projekt auf *GitHub* hinterlegt.
+Dieses Projekt ist als *Open Source* Projekt auf *GitHub* hinterlegt.
 ### - 21. Tasks ###
 Aufgaben wurde für 2 Entwickler aufgeteilt.
 ### - 23. Risks ###
