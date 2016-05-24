@@ -6,7 +6,7 @@ import java.util.List;
 
 
 public class Observable implements IObservable{
-	private List<IObserver> subscribers = new ArrayList<IObserver>(2);// 2 when gui is implemented
+	private List<IObserver> subscribers = new ArrayList<IObserver>(2);
 
 	public void addObserver(IObserver s) {
 		subscribers.add(s);

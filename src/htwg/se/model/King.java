@@ -9,7 +9,8 @@ import java.util.List;
 public class King extends Chesspiece {
 
 	private List<Point> validMovesList;
-
+	public String name;
+	
 	public King(int x, int y, char color) {
 		super(x, y, color);
 		validMovesList = new ArrayList<Point>();

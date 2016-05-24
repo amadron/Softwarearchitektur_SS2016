@@ -1,6 +1,6 @@
-package htwg.se.presistence.couchdb;
+package htwg.se.persistence.couchdb;
 
-import htwg.se.presistence.IDataAccessObject;
+import htwg.se.persistence.IDataAccessObject;
 
 /**
  * Created by benedict on 06.04.16.

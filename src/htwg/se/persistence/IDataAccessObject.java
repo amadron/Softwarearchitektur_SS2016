@@ -1,4 +1,4 @@
-package htwg.se.presistence;
+package htwg.se.persistence;
 
 /**
  * Created by benedict on 23.03.16.

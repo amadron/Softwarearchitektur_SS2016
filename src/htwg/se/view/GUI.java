@@ -80,7 +80,7 @@ public class GUI implements UI, IObserver, ActionListener {
 		initField();
 		drawField();
 		
-		//panelScore.add(buttonStore);
+		panelScore.add(buttonStore);
 		//panelGameField.add(buttonRetrieve);
 		
 		meinFrame.setVisible(true);
@@ -124,7 +124,7 @@ public class GUI implements UI, IObserver, ActionListener {
 			}
 		}
 		
-		//buttonStore.addActionListener(this);
+		buttonStore.addActionListener(this);
 		//buttonRetrieve.addActionListener(this);
 		message(controller.getStatusMessage());
 	}
@@ -174,8 +174,13 @@ public class GUI implements UI, IObserver, ActionListener {
 	           System.exit(0);
 	        }
 	        else if(e.getSource() == this.buttonStore){
-	        	System.out.println("store");
-	        	controller.storeGameField();
+	        		System.out.println("aufruf");
+					try {
+						controller.storeGameField();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 	        }
 	        else if(e.getSource() == this.buttonRetrieve){
 	        	System.out.println("retrieve");

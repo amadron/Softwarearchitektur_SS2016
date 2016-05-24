@@ -171,9 +171,10 @@ public class TUI implements UI, IObserver {
 
 	@Override
 	public void update(Event e) {
+		/*todo: Konsolen ausgabe deaktiviert zur uebersicht
 		printUI();
 		if (controller.checkWin())
-			message("GAME OVER");
+			message("GAME OVER");*/
 	}
 
 	public String getWtui() {

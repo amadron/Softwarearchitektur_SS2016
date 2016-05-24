@@ -1,21 +1,32 @@
 package htwg.se.controller;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonIOException;
 import com.google.inject.Inject;
 
 import htwg.se.model.*;
-import htwg.se.presistence.IDataAccessObject;
+import htwg.se.persistence.IDataAccessObject;
 import htwg.util.*;
 
 public class ChessController extends Observable implements Icontroller {
 	private GameField gamefield;
 	private boolean blackturn;
 	private IDataAccessObject database;
+	public King ki = new King(4, 4, 'b');
 
 	@Inject
 	public ChessController(GameField gamefield) {
 		this.gamefield = gamefield;
 		blackturn = true;
 	}
+	
 
 	public Field[][] getField() {
 		return gamefield.getField();
@@ -27,14 +38,15 @@ public class ChessController extends Observable implements Icontroller {
 		return "white";
 	}
 
-	public void storeGameField() {
-			
-		try {
-			database.create(gamefield);
-		} finally {
-			database.update(gamefield);
-		}
-	
+	public void storeGameField() throws JsonIOException, IOException {
+		System.out.println("funktioniert");
+		Gson gson = new Gson();
+		King kk = ki;
+		kk.setmovedTrue();
+		
+		gson.toJson(kk, new FileWriter("C:\\file.json"));
+		String jsonInString = gson.toJson(kk);
+		System.out.println(jsonInString);
 	}
 	
 
