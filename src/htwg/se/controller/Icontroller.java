@@ -15,5 +15,6 @@ public interface Icontroller extends IObservable{
 	public void reset();
 	public boolean checkWin();
 	public String getWinner();
+	public void searchGameJson(String gameName);
 	
 }

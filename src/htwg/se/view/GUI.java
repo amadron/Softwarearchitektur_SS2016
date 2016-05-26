@@ -85,9 +85,6 @@ public class GUI implements UI, IObserver, ActionListener {
 		
 		meinFrame.setVisible(true);
 		meinFrame.repaint();
-		
-		
-		
 
 	}
 
@@ -101,6 +98,7 @@ public class GUI implements UI, IObserver, ActionListener {
 				panelGameField.add(buttons[x][y]);
 			}
 		}
+        buttonStore.addActionListener(this);
 	}
 
 	private void drawField() {
@@ -123,10 +121,8 @@ public class GUI implements UI, IObserver, ActionListener {
 						
 			}
 		}
-		
-		buttonStore.addActionListener(this);
-		//buttonRetrieve.addActionListener(this);
-		message(controller.getStatusMessage());
+
+        message(controller.getStatusMessage());
 	}
 
 	private void setButtonColorField(int y, int x) {
@@ -166,7 +162,7 @@ public class GUI implements UI, IObserver, ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		
+
 		  if(e.getSource() == this.buttonReset){
 			  restart();
 	        }
@@ -174,13 +170,7 @@ public class GUI implements UI, IObserver, ActionListener {
 	           System.exit(0);
 	        }
 	        else if(e.getSource() == this.buttonStore){
-	        		System.out.println("aufruf");
-					try {
-						controller.storeGameField();
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
+					controller.searchGameJson("Marco_Bene");
 	        }
 	        else if(e.getSource() == this.buttonRetrieve){
 	        	System.out.println("retrieve");
@@ -228,14 +218,14 @@ public class GUI implements UI, IObserver, ActionListener {
 	}
 
 
-	@Override
+
 	public void update(Event e) {
 		drawField();
 		if(controller.checkWin())
 			winner();
 	}
 
-	@Override
+
 	public void restart() {
 		controller.reset();
 		meinFrame.setEnabled(true);
@@ -244,9 +234,9 @@ public class GUI implements UI, IObserver, ActionListener {
 
 	}
 
-	@Override
+
 	public void pressed(int x, int y) {
-		if(firstpressed && new Point(x,y) != first) {
+        if(firstpressed && new Point(x,y) != first) {
 			from.setText("FROM x:"+x+" y: "+y);
 			controller.move(first, new Point(x,y));
 			firstpressed = false;

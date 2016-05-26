@@ -23,5 +23,11 @@ public class Point {
 		return false;
 	}
 
+
+	public String toString() {
+		String point = x + "_" + y;
+		return point;
+	}
+
 	
 }

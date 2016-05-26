@@ -1,30 +1,43 @@
 package htwg.se.controller;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
-
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
 import com.google.inject.Inject;
-
-import htwg.se.model.*;
+import htwg.se.model.Chesspiece;
+import htwg.se.model.Field;
+import htwg.se.model.GameField;
+import htwg.se.model.King;
 import htwg.se.persistence.IDataAccessObject;
-import htwg.util.*;
+import htwg.util.Observable;
+import htwg.util.Point;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONArray;
+import org.json.simple.parser.ParseException;
+import org.json.simple.parser.JSONParser;
+import java.io.FileWriter;
+import java.io.IOException;
 
+@SuppressWarnings("ALL")
 public class ChessController extends Observable implements Icontroller {
 	private GameField gamefield;
 	private boolean blackturn;
 	private IDataAccessObject database;
-	public King ki = new King(4, 4, 'b');
+	public King ki = new King(4, 4, 'b'); //gson test
+	private String moveJson = "{";
+    private String gameName = "Marco_Bene";
+    private int id = 0;
+
+    private JSONObject mainObj = new JSONObject();
+    private JSONArray games = new JSONArray();
+    private JSONObject gameProberties = new JSONObject();
+    private JSONArray gameMovelist = new JSONArray();
+
 
 	@Inject
 	public ChessController(GameField gamefield) {
 		this.gamefield = gamefield;
 		blackturn = true;
+        createJson();
 	}
 	
 
@@ -48,6 +61,7 @@ public class ChessController extends Observable implements Icontroller {
 		String jsonInString = gson.toJson(kk);
 		System.out.println(jsonInString);
 	}
+
 	
 
 	public void retrieveGameField() {
@@ -62,6 +76,7 @@ public class ChessController extends Observable implements Icontroller {
 		if (checkTurn(start)) {
 			if (gamefield.moveCheck(start, goal)) {
 				gamefield.moveAfterCheck(start, goal);
+                addJsonMove(start, goal);
 				blackturn = (!blackturn);
 			}
 		}
@@ -70,7 +85,38 @@ public class ChessController extends Observable implements Icontroller {
 
 	}
 
-	private boolean checkTurn(Point start) {
+    public void createJson() {
+        mainObj.put("Gamelist", games);
+        games.add(gameProberties);
+        gameProberties.put("Gamename", gameName);
+        gameProberties.put("Movelist",gameMovelist);
+    }
+
+    public void addJsonMove(Point start, Point goal) {
+        JSONObject gameMove = new JSONObject();
+        gameMove.put("From", start.toString());
+        gameMove.put("To", goal.toString());
+        gameMovelist.add(gameMove);
+
+
+    }
+
+    public void searchGameJson(String gameName) {
+
+        for (int i = 0; i < games.size(); i++) {
+            Object obj = games.get(i);
+            JSONObject game = (JSONObject) obj;
+
+            if(game.get("Gamename") == gameName) {
+                System.out.println("Game gefunden");
+                break;
+            }
+        }
+
+        System.out.println(mainObj);
+    }
+
+    private boolean checkTurn(Point start) {
 		Field field[][] = gamefield.getField();
 		Chesspiece piece = field[start.getX()][start.getY()].getChessPiece();
 		if (piece == null) {
@@ -85,7 +131,7 @@ public class ChessController extends Observable implements Icontroller {
 		notifyObservers();
 	}
 
-	private boolean colorCheck(Chesspiece piece) {
+	public boolean colorCheck(Chesspiece piece) {
 		if (blackturn) {
 			return piece.getcolor() == 'b';
 		}
