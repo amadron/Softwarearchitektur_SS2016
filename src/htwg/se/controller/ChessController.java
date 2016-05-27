@@ -10,10 +10,8 @@ import htwg.se.model.King;
 import htwg.se.persistence.IDataAccessObject;
 import htwg.util.Observable;
 import htwg.util.Point;
-import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
-import org.json.simple.parser.ParseException;
-import org.json.simple.parser.JSONParser;
+import org.json.simple.JSONObject;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -108,12 +106,27 @@ public class ChessController extends Observable implements Icontroller {
             JSONObject game = (JSONObject) obj;
 
             if(game.get("Gamename") == gameName) {
+				JSONArray moveList = new JSONArray();
+				obj = game.get("Movelist");
+				moveList = (JSONArray) obj;
+				for (int n = 0; n < moveList.size(); n++) {
+					obj = moveList.get(n);
+					game = (JSONObject) obj;
+					System.out.println("From: " + game.get("From") + " To:" + game.get("To"));
+				}
+
                 System.out.println("Game gefunden");
+                //getMoveListJson(games);
                 break;
             }
         }
 
         System.out.println(mainObj);
+    }
+
+    public void getMoveListJson(JSONObject aktuellesGame) {
+
+
     }
 
     private boolean checkTurn(Point start) {
