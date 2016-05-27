@@ -23,13 +23,22 @@ public class ChessController extends Observable implements Icontroller {
 	public King ki = new King(4, 4, 'b'); //gson test
 	private String moveJson = "{";
     private String gameName = "Marco_Bene";
+	private String gameName2 = "Marco";
+	private String gameName3 = "Bene";
     private int id = 0;
 
     private JSONObject mainObj = new JSONObject();
     private JSONArray games = new JSONArray();
-    private JSONObject gameProberties = new JSONObject();
-    private JSONArray gameMovelist = new JSONArray();
+	private JSONArray games2 = new JSONArray();
+	private JSONArray games3 = new JSONArray();
 
+    private JSONObject gameProberties = new JSONObject();
+	private JSONObject gameProberties2 = new JSONObject();
+	private JSONObject gameProberties3 = new JSONObject();
+
+	private JSONArray gameMovelist = new JSONArray();
+	private JSONArray gameMovelist2 = new JSONArray();
+	private JSONArray gameMovelist3 = new JSONArray();
 
 	@Inject
 	public ChessController(GameField gamefield) {
@@ -85,9 +94,18 @@ public class ChessController extends Observable implements Icontroller {
 
     public void createJson() {
         mainObj.put("Gamelist", games);
+
         games.add(gameProberties);
         gameProberties.put("Gamename", gameName);
         gameProberties.put("Movelist",gameMovelist);
+
+		games.add(gameProberties2);
+		gameProberties2.put("Gamename", gameName2);
+		gameProberties2.put("Movelist",gameMovelist);
+
+		games.add(gameProberties3);
+		gameProberties3.put("Gamename", gameName3);
+		gameProberties3.put("Movelist",gameMovelist);
     }
 
     public void addJsonMove(Point start, Point goal) {
@@ -106,25 +124,27 @@ public class ChessController extends Observable implements Icontroller {
             JSONObject game = (JSONObject) obj;
 
             if(game.get("Gamename") == gameName) {
-				JSONArray moveList = new JSONArray();
-				obj = game.get("Movelist");
-				moveList = (JSONArray) obj;
-				for (int n = 0; n < moveList.size(); n++) {
-					obj = moveList.get(n);
-					game = (JSONObject) obj;
-					System.out.println("From: " + game.get("From") + " To:" + game.get("To"));
-				}
-
-                System.out.println("Game gefunden");
-                //getMoveListJson(games);
-                break;
+				GetJsonMoveList(game);
+				break;
             }
         }
 
         System.out.println(mainObj);
     }
 
-    public void getMoveListJson(JSONObject aktuellesGame) {
+	public void GetJsonMoveList(JSONObject game) {
+		Object obj;
+		JSONArray moveList = new JSONArray();
+		obj = game.get("Movelist");
+		moveList = (JSONArray) obj;
+		for (int n = 0; n < moveList.size(); n++) {
+            obj = moveList.get(n);
+            game = (JSONObject) obj;
+            System.out.println("From: " + game.get("From") + " To:" + game.get("To"));
+        }
+	}
+
+	public void getMoveListJson(JSONObject aktuellesGame) {
 
 
     }
