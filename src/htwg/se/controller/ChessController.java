@@ -106,6 +106,7 @@ public class ChessController extends Observable implements Icontroller {
 		games.add(gameProberties3);
 		gameProberties3.put("Gamename", gameName3);
 		gameProberties3.put("Movelist",gameMovelist);
+
     }
 
     public void addJsonMove(Point start, Point goal) {
