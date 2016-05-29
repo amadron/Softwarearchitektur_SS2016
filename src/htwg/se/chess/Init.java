@@ -22,12 +22,13 @@ public class Init {
 		// Set up Google Guice Dependency Injector
 		injector = Guice.createInjector(new ChessModule());
 
-		// Build up the application, resolving dependencies automatically by Guice
+		// Build up the application, resolving dependencies automatically by
+		// Guice
 		cc = injector.getInstance(Icontroller.class);
 
 		tui = new TUI(cc);
 		gui = new GUI(cc);
-		//new GameField();
+		// new GameField();
 
 		// TUI
 		scanner = new Scanner(System.in);

@@ -8,9 +8,8 @@ import java.util.List;
 
 public class Queen extends Chesspiece {
 
-
 	private List<Point> validMovesList;
-	
+
 	public Queen(int x, int y, char color) {
 		super(x, y, color);
 		validMovesList = new ArrayList<Point>();
@@ -19,33 +18,32 @@ public class Queen extends Chesspiece {
 	@Override
 	public Point[] validMove(int x, int y) {
 
-		if (equalPosition(x, y) || outRange(x,y)) {
+		if (equalPosition(x, y) || outRange(x, y)) {
 			return null;
 		}
-		
+
 		whichDirection(x, y);
 
 		return listToArray();
 
 	}
-	
+
 	private boolean outRange(int x, int y) {
-		if(x >= 8 || x < 0) {
+		if (x >= 8 || x < 0) {
+			return true;
+		} else if (y >= 8 || y < 0) {
 			return true;
 		}
-		else if(y >= 8 || y < 0) {
-			return true;
-		}
-		
+
 		return false;
 	}
-		
+
 	private void whichDirection(int x, int y) {
 		if (x != this.x && y == this.y) {
 			horizontal(x, y);
 		} else if (x == this.x) {
 			vertical(x, y);
-		} else 
+		} else
 			diagonal(x, y);
 	}
 
@@ -60,14 +58,14 @@ public class Queen extends Chesspiece {
 		Point pointField[] = new Point[validMovesList.size()];
 		int i = 0;
 		for (Point point : validMovesList) {
-			
-			if(i == 0) {
-				i++;	
+
+			if (i == 0) {
+				i++;
 			} else {
-				pointField[i-1] = point;
+				pointField[i - 1] = point;
 				i++;
 			}
-			
+
 		}
 		validMovesList.clear();
 
@@ -89,7 +87,7 @@ public class Queen extends Chesspiece {
 	}
 
 	private void rightHorizontal(int x, int y) {
-		for (int i = this.x; i <= x; i++) { 
+		for (int i = this.x; i <= x; i++) {
 			validMovesList.add(new Point(i, y));
 		}
 	}
@@ -124,13 +122,11 @@ public class Queen extends Chesspiece {
 	}
 
 	private void upDiagonal(int x, int y) {
-		if(x < this.x) {
+		if (x < this.x) {
 			leftUpDiagonal(x);
 		} else {
 			rightUpDiagonal(x);
 		}
-		
-		
 
 	}
 
@@ -140,7 +136,7 @@ public class Queen extends Chesspiece {
 			validMovesList.add(new Point(this.x - n, this.y + n));
 			n++;
 		}
-		
+
 	}
 
 	private void rightUpDiagonal(int x) {
@@ -152,30 +148,30 @@ public class Queen extends Chesspiece {
 	}
 
 	private void downDiagonal(int x, int y) {
-		if(x<this.x) {
+		if (x < this.x) {
 			leftDownDiagonal(x);
 		} else {
 			rightDownDiagonal(x);
 		}
 
 	}
-	
+
 	private void leftDownDiagonal(int x) {
 		int n = 0;
 		for (int i = this.x; i >= x; i--) {
 			validMovesList.add(new Point(this.x - n, this.y - n));
 			n++;
 		}
-		
+
 	}
-	
+
 	private void rightDownDiagonal(int x) {
 		int n = 0;
 		for (int i = this.x; i <= x; i++) {
 			validMovesList.add(new Point(this.x + n, this.y - n));
 			n++;
 		}
-		
+
 	}
 
 	@Override

@@ -1,52 +1,30 @@
 package htwg.se.controller;
 
-import com.google.gson.Gson;
+import java.io.IOException;
+
 import com.google.gson.JsonIOException;
 import com.google.inject.Inject;
+
 import htwg.se.model.Chesspiece;
 import htwg.se.model.Field;
 import htwg.se.model.GameField;
-import htwg.se.model.King;
 import htwg.se.persistence.IDataAccessObject;
 import htwg.util.Observable;
 import htwg.util.Point;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import java.io.FileWriter;
-import java.io.IOException;
 
-@SuppressWarnings("ALL")
+
 public class ChessController extends Observable implements Icontroller {
 	private GameField gamefield;
 	private boolean blackturn;
-	private IDataAccessObject database;
-	public King ki = new King(4, 4, 'b'); //gson test
-	private String moveJson = "{";
-    private String gameName = "Marco_Bene";
-	private String gameName2 = "Marco";
-	private String gameName3 = "Bene";
-    private int id = 0;
-
-    private JSONObject mainObj = new JSONObject();
-    private JSONArray games = new JSONArray();
-	private JSONArray games2 = new JSONArray();
-	private JSONArray games3 = new JSONArray();
-
-    private JSONObject gameProberties = new JSONObject();
-	private JSONObject gameProberties2 = new JSONObject();
-	private JSONObject gameProberties3 = new JSONObject();
-
-	private JSONArray gameMovelist = new JSONArray();
-	private JSONArray gameMovelist2 = new JSONArray();
-	private JSONArray gameMovelist3 = new JSONArray();
-
+	
+	@Inject
+	private IDataAccessObject DAOdatabase;
+	
 	@Inject
 	public ChessController(GameField gamefield) {
 		this.gamefield = gamefield;
 		blackturn = true;
-        createJson();
 	}
-	
 
 	public Field[][] getField() {
 		return gamefield.getField();
@@ -58,32 +36,15 @@ public class ChessController extends Observable implements Icontroller {
 		return "white";
 	}
 
-	public void storeGameField() throws JsonIOException, IOException {
-		System.out.println("funktioniert");
-		Gson gson = new Gson();
-		King kk = ki;
-		kk.setmovedTrue();
-		
-		gson.toJson(kk, new FileWriter("C:\\file.json"));
-		String jsonInString = gson.toJson(kk);
-		System.out.println(jsonInString);
-	}
-
+	public void storeGame() {
+		DAOdatabase.saveGame(gamefield.getGoverview());
 	
-
-	public void retrieveGameField() {
-//		ObjectContainer dataBase = Db4o.openFile("Gamefield.db");
-//		
-//		Query query = dataBase.query();
-//		ObjectSet<GameField> gamefields = query.execute();
-//			gamefield.setField(gamefields.get(0));
 	}
 
 	public void move(Point start, Point goal) {
 		if (checkTurn(start)) {
 			if (gamefield.moveCheck(start, goal)) {
 				gamefield.moveAfterCheck(start, goal);
-                addJsonMove(start, goal);
 				blackturn = (!blackturn);
 			}
 		}
@@ -92,65 +53,7 @@ public class ChessController extends Observable implements Icontroller {
 
 	}
 
-    public void createJson() {
-        mainObj.put("Gamelist", games);
-
-        games.add(gameProberties);
-        gameProberties.put("Gamename", gameName);
-        gameProberties.put("Movelist",gameMovelist);
-
-		games.add(gameProberties2);
-		gameProberties2.put("Gamename", gameName2);
-		gameProberties2.put("Movelist",gameMovelist);
-
-		games.add(gameProberties3);
-		gameProberties3.put("Gamename", gameName3);
-		gameProberties3.put("Movelist",gameMovelist);
-
-    }
-
-    public void addJsonMove(Point start, Point goal) {
-        JSONObject gameMove = new JSONObject();
-        gameMove.put("From", start.toString());
-        gameMove.put("To", goal.toString());
-        gameMovelist.add(gameMove);
-
-
-    }
-
-    public void searchGameJson(String gameName) {
-
-        for (int i = 0; i < games.size(); i++) {
-            Object obj = games.get(i);
-            JSONObject game = (JSONObject) obj;
-
-            if(game.get("Gamename") == gameName) {
-				GetJsonMoveList(game);
-				break;
-            }
-        }
-
-        System.out.println(mainObj);
-    }
-
-	public void GetJsonMoveList(JSONObject game) {
-		Object obj;
-		JSONArray moveList = new JSONArray();
-		obj = game.get("Movelist");
-		moveList = (JSONArray) obj;
-		for (int n = 0; n < moveList.size(); n++) {
-            obj = moveList.get(n);
-            game = (JSONObject) obj;
-            System.out.println("From: " + game.get("From") + " To:" + game.get("To"));
-        }
-	}
-
-	public void getMoveListJson(JSONObject aktuellesGame) {
-
-
-    }
-
-    private boolean checkTurn(Point start) {
+	private boolean checkTurn(Point start) {
 		Field field[][] = gamefield.getField();
 		Chesspiece piece = field[start.getX()][start.getY()].getChessPiece();
 		if (piece == null) {
@@ -187,6 +90,10 @@ public class ChessController extends Observable implements Icontroller {
 		return "NONE";
 	}
 
+	@Override
+	public void retrieveGame() {
+		// TODO Auto-generated method stub
+
+	}
 
 }
-

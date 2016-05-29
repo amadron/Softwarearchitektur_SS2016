@@ -40,9 +40,9 @@ public class TUI implements UI, IObserver {
 		Field field[][] = controller.getField();
 		String testAusgabe = "";
 		String feld = "";
-		
-		int count1=0,count2=0;
-		
+
+		int count1 = 0, count2 = 0;
+
 		testAusgabe = this.createXCoordinates(testAusgabe);
 		figures.clear();
 		for (int y = 7; y >= 0; --y) {
@@ -74,12 +74,12 @@ public class TUI implements UI, IObserver {
 
 			feld += testAusgabe + "\n";
 			testAusgabe = "";
-			
+
 		}
-		
+
 		System.out.println("count1: " + count1);
 		System.out.println("count2: " + count2);
-		
+
 		message(feld);
 		message(controller.getStatusMessage());
 
@@ -111,17 +111,15 @@ public class TUI implements UI, IObserver {
 
 	private void jsonArrayBuilder(Field[][] field, int y, int x, boolean leer) {
 
-		if(!leer){
+		if (!leer) {
 			figures.add("{\"figure\":\"" + field[x][y].getChessPiece().toChar() + "\", \"color\":\""
 					+ field[x][y].getChessPiece().getcolor() + "\", \"bg\":\"" + bgColor + "\"," + "\"pos\":\"" + x + y
 					+ "\"}");
+		} else {
+			figures.add("{\"figure\":\"" + "x" + "\", \"color\":\"" + "x" + "\", \"bg\":\"" + bgColor + "\","
+					+ "\"pos\":\"" + x + y + "\"}");
 		}
-		else {
-			figures.add("{\"figure\":\"" + "x" + "\", \"color\":\""
-					+ "x" + "\", \"bg\":\"" + bgColor + "\"," + "\"pos\":\"" + x + y
-					+ "\"}");
-		}
-		
+
 	}
 
 	private String createYCoordinates(String testAusgabe, int y) {
@@ -171,10 +169,10 @@ public class TUI implements UI, IObserver {
 
 	@Override
 	public void update(Event e) {
-		/*todo: Konsolen ausgabe deaktiviert zur uebersicht
-		printUI();
-		if (controller.checkWin())
-			message("GAME OVER");*/
+		/*
+		 * todo: Konsolen ausgabe deaktiviert zur uebersicht printUI(); if
+		 * (controller.checkWin()) message("GAME OVER");
+		 */
 	}
 
 	public String getWtui() {

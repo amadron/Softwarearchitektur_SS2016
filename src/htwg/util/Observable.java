@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-
-public class Observable implements IObservable{
+public class Observable implements IObservable {
 	private List<IObserver> subscribers = new ArrayList<IObserver>(2);
 
 	public void addObserver(IObserver s) {
@@ -26,7 +25,7 @@ public class Observable implements IObservable{
 
 	@Override
 	public void notifyObservers(Event e) {
-		for ( Iterator<IObserver> iter = subscribers.iterator(); iter.hasNext();) {
+		for (Iterator<IObserver> iter = subscribers.iterator(); iter.hasNext();) {
 			IObserver observer = iter.next();
 			observer.update(e);
 		}

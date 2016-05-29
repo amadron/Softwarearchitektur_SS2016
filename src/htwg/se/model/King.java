@@ -10,7 +10,7 @@ public class King extends Chesspiece {
 
 	private List<Point> validMovesList;
 	public String name;
-	
+
 	public King(int x, int y, char color) {
 		super(x, y, color);
 		validMovesList = new ArrayList<Point>();
@@ -29,12 +29,12 @@ public class King extends Chesspiece {
 
 	}
 
-	private boolean oneSquare(int x, int y) {		
+	private boolean oneSquare(int x, int y) {
 		if (this.x == x || (this.x + 1) == x || (this.x - 1) == x)
-			if (this.y == y || (this.y + 1) == y || (this.y - 1) == y){
+			if (this.y == y || (this.y + 1) == y || (this.y - 1) == y) {
 				return false;
 			}
-				
+
 		return true;
 	}
 
@@ -49,7 +49,7 @@ public class King extends Chesspiece {
 	}
 
 	private void whichDirection(int x, int y) {
- 		if (x != this.x && y == this.y) {
+		if (x != this.x && y == this.y) {
 			horizontal(x, y);
 		} else if (x == this.x) {
 			vertical(x, y);
@@ -66,7 +66,7 @@ public class King extends Chesspiece {
 
 	private Point[] listToArray() {
 		Point pointField[] = new Point[1];
-		
+
 		pointField[0] = validMovesList.get(0);
 		validMovesList.clear();
 
@@ -82,11 +82,11 @@ public class King extends Chesspiece {
 	}
 
 	private void leftHorizontal(int x, int y) {
-			validMovesList.add(new Point(x, y));
+		validMovesList.add(new Point(x, y));
 	}
 
 	private void rightHorizontal(int x, int y) {
-			validMovesList.add(new Point(x, y));
+		validMovesList.add(new Point(x, y));
 	}
 
 	private void vertical(int x, int y) {
@@ -98,11 +98,11 @@ public class King extends Chesspiece {
 	}
 
 	private void upVertical(int x, int y) {
-			validMovesList.add(new Point(x, y));
+		validMovesList.add(new Point(x, y));
 	}
 
 	private void downVertical(int x, int y) {
-			validMovesList.add(new Point(x, y));
+		validMovesList.add(new Point(x, y));
 	}
 
 	private void diagonal(int x, int y) {
@@ -124,12 +124,12 @@ public class King extends Chesspiece {
 	}
 
 	private void leftUpDiagonal(int x) {
-			validMovesList.add(new Point(this.x - 1, this.y + 1));
+		validMovesList.add(new Point(this.x - 1, this.y + 1));
 
 	}
 
 	private void rightUpDiagonal(int x) {
-			validMovesList.add(new Point(this.x + 1, this.y + 1));
+		validMovesList.add(new Point(this.x + 1, this.y + 1));
 	}
 
 	private void downDiagonal(int x, int y) {
@@ -143,15 +143,15 @@ public class King extends Chesspiece {
 
 	private void leftDownDiagonal(int x) {
 		int n = 0;
-		//for (int i = this.x; i >= x; i--) {
-			validMovesList.add(new Point(this.x - 1, this.y - 1));
-			//n++;
-		//}
+		// for (int i = this.x; i >= x; i--) {
+		validMovesList.add(new Point(this.x - 1, this.y - 1));
+		// n++;
+		// }
 
 	}
 
 	private void rightDownDiagonal(int x) {
-			validMovesList.add(new Point(this.x + 1, this.y - 1));
+		validMovesList.add(new Point(this.x + 1, this.y - 1));
 
 	}
 

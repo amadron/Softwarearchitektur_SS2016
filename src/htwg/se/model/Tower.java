@@ -8,7 +8,6 @@ import java.util.List;
 
 public class Tower extends Chesspiece {
 
-
 	private List<Point> validMovesList;
 
 	public Tower(int x, int y, char color) {
@@ -19,49 +18,48 @@ public class Tower extends Chesspiece {
 	@Override
 	public Point[] validMove(int x, int y) {
 
-		if (equalPosition(x, y) || outRange(x,y) || possibleMove(x,y)) {
+		if (equalPosition(x, y) || outRange(x, y) || possibleMove(x, y)) {
 			return null;
 		}
-		
+
 		whichDirection(x, y);
 
 		return listToArray();
 
 	}
 
-	private boolean possibleMove(int x, int y) {		
+	private boolean possibleMove(int x, int y) {
 		List<Point> allMoveList = new ArrayList<Point>();
-		Point move = new Point(x,y);
-		
+		Point move = new Point(x, y);
+
 		allMoveList.add(new Point(this.x, y));
 		allMoveList.add(new Point(x, this.y));
-			
+
 		for (Point point : allMoveList) {
-			if(move.equals(point))
+			if (move.equals(point))
 				return false;
 		}
 
 		return true;
-		
+
 	}
 
 	private boolean outRange(int x, int y) {
-		if(x >= 8 || x < 0) {
+		if (x >= 8 || x < 0) {
+			return true;
+		} else if (y >= 8 || y < 0) {
 			return true;
 		}
-		else if(y >= 8 || y < 0) {
-			return true;
-		}
-		
+
 		return false;
 	}
 
-	private void whichDirection(int x, int y) {		
+	private void whichDirection(int x, int y) {
 		if (x != this.x) {
 			horizontal(x, y);
 		}
 		if (y != this.y)
-			vertical(x, y);	
+			vertical(x, y);
 	}
 
 	private boolean equalPosition(int x, int y) {
@@ -75,14 +73,14 @@ public class Tower extends Chesspiece {
 		Point pointField[] = new Point[validMovesList.size()];
 		int i = 0;
 		for (Point point : validMovesList) {
-			
-			if(i == 0) {
-				i++;	
+
+			if (i == 0) {
+				i++;
 			} else {
-				pointField[i-1] = point;
+				pointField[i - 1] = point;
 				i++;
 			}
-			
+
 		}
 		validMovesList.clear();
 
@@ -104,7 +102,7 @@ public class Tower extends Chesspiece {
 	}
 
 	private void rightHorizontal(int x, int y) {
-		for (int i = this.x; i <= x; i++) { 
+		for (int i = this.x; i <= x; i++) {
 			validMovesList.add(new Point(i, y));
 		}
 	}
@@ -128,8 +126,6 @@ public class Tower extends Chesspiece {
 			validMovesList.add(new Point(x, i));
 		}
 	}
-
-	
 
 	@Override
 	public char toChar() {

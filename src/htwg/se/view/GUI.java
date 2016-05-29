@@ -16,12 +16,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-
-
-
-
-
-
 import htwg.se.controller.Icontroller;
 import htwg.se.model.Field;
 import htwg.util.Event;
@@ -48,11 +42,10 @@ public class GUI implements UI, IObserver, ActionListener {
 	JPanel panelGameOver = new JPanel();
 	JButton buttonExit = new JButton("Beenden");
 	JButton buttonReset = new JButton("neustart");
-	
+
 	JButton buttonStore = new JButton("Store");
 	JButton buttonRetrieve = new JButton("retrieve");
-	
-	
+
 	public GUI(Icontroller cc) {
 
 		controller = cc;
@@ -76,13 +69,13 @@ public class GUI implements UI, IObserver, ActionListener {
 		meinFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		meinFrame.setSize(900, 900);
 		meinFrame.add(panel);
-		
+
 		initField();
 		drawField();
-		
+
 		panelScore.add(buttonStore);
-		//panelGameField.add(buttonRetrieve);
-		
+		// panelGameField.add(buttonRetrieve);
+
 		meinFrame.setVisible(true);
 		meinFrame.repaint();
 
@@ -98,31 +91,31 @@ public class GUI implements UI, IObserver, ActionListener {
 				panelGameField.add(buttons[x][y]);
 			}
 		}
-        buttonStore.addActionListener(this);
+		buttonStore.addActionListener(this);
 	}
 
 	private void drawField() {
 		Field field[][] = controller.getField();
 		String figure = "";
-		
+
 		for (int y = 7; y >= 0; y--) {
 			for (int x = 0; x < 8; x++) {
-				
+
 				setButtonColorField(y, x);
 				if (field[x][y].getChessPiece() != null) {
 					figure += field[x][y].getChessPiece().getcolor();
 					figure += field[x][y].getChessPiece().toChar();
 					figure += buttons[x][y].getFieldColor();
 					figure += ".jpg";
-					//System.out.println(figure);
-					setButtonImage(y,x,figure);
+					// System.out.println(figure);
+					setButtonImage(y, x, figure);
 					figure = "";
-				} 
-						
+				}
+
 			}
 		}
 
-        message(controller.getStatusMessage());
+		message(controller.getStatusMessage());
 	}
 
 	private void setButtonColorField(int y, int x) {
@@ -133,7 +126,7 @@ public class GUI implements UI, IObserver, ActionListener {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void setButtonImage(int y, int x, String chessPiece) {
 		try {
 			img = ImageIO.read(getClass().getResource(chessPiece));
@@ -163,91 +156,77 @@ public class GUI implements UI, IObserver, ActionListener {
 
 	public void actionPerformed(ActionEvent e) {
 
-		  if(e.getSource() == this.buttonReset){
-			  restart();
-	        }
-	        else if(e.getSource() == this.buttonExit){
-	           System.exit(0);
-	        }
-	        else if(e.getSource() == this.buttonStore){
-					controller.searchGameJson("Marco_Bene");
-	        }
-	        else if(e.getSource() == this.buttonRetrieve){
-	        	System.out.println("retrieve");
-	        	controller.retrieveGameField();
-	        }
-		
-		  
-		  if(e.getSource() == this.buttonStore || e.getSource() == this.buttonRetrieve){  
-			  return;
-		  }
-		  
+		if (e.getSource() == this.buttonReset) {
+			restart();
+		} else if (e.getSource() == this.buttonExit) {
+			System.exit(0);
+		} else if (e.getSource() == this.buttonStore) {
+			// controller.searchGameJson("Marco_Bene");
+			controller.storeGame();
+		} else if (e.getSource() == this.buttonRetrieve) {
+			System.out.println("retrieve");
+			controller.retrieveGame();
+		}
+
+		if (e.getSource() == this.buttonStore || e.getSource() == this.buttonRetrieve) {
+			return;
+		}
+
 		Object o = e.getSource();
-		ChessButton cbutton = (ChessButton) o;	
+		ChessButton cbutton = (ChessButton) o;
 		pressed(cbutton.getFieldX(), cbutton.getFieldY());
-		
-		
-	    
-		
+
 	}
-	
+
 	public void winner() {
 		from.setText("");
 		target.setText("");
-		
+
 		meinFrame.setEnabled(false);
-		
-		
+
 		buttonExit.addActionListener(this);
 		buttonReset.addActionListener(this);
-		
-        meinJDialog.setTitle("Game Over");
-        meinJDialog.add(panelGameOver);
-        panelGameOver.add(buttonReset);
-        panelGameOver.add(buttonExit);
-        meinJDialog.setSize(200,200);
-        meinJDialog.setModal(true);
-        meinJDialog.pack();
-        meinJDialog.setVisible(true);
-		
-		
+
+		meinJDialog.setTitle("Game Over");
+		meinJDialog.add(panelGameOver);
+		panelGameOver.add(buttonReset);
+		panelGameOver.add(buttonExit);
+		meinJDialog.setSize(200, 200);
+		meinJDialog.setModal(true);
+		meinJDialog.pack();
+		meinJDialog.setVisible(true);
+
 	}
 
 	public void message(String text) {
 		whichTurn.setText(text);
 	}
 
-
-
 	public void update(Event e) {
 		drawField();
-		if(controller.checkWin())
+		if (controller.checkWin())
 			winner();
 	}
-
 
 	public void restart() {
 		controller.reset();
 		meinFrame.setEnabled(true);
-		//meinJDialog.setVisible(false);
+		// meinJDialog.setVisible(false);
 		drawField();
 
 	}
 
-
 	public void pressed(int x, int y) {
-        if(firstpressed && new Point(x,y) != first) {
-			from.setText("FROM x:"+x+" y: "+y);
-			controller.move(first, new Point(x,y));
+		if (firstpressed && new Point(x, y) != first) {
+			from.setText("FROM x:" + x + " y: " + y);
+			controller.move(first, new Point(x, y));
 			firstpressed = false;
 			return;
 		}
-		first = new Point(x,y);
-		target.setText("TARGET x:"+x+" y: "+y);
+		first = new Point(x, y);
+		target.setText("TARGET x:" + x + " y: " + y);
 		firstpressed = true;
 
 	}
 
-}	
-	     
-		
+}

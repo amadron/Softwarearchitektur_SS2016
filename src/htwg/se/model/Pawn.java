@@ -19,12 +19,10 @@ public class Pawn extends Chesspiece {
 	@Override
 	public Point[] validMove(int x, int y) {
 
-		
-		
-		if (equalPosition(x, y) || outRange(x, y) || possibleMove(x,y)) {
+		if (equalPosition(x, y) || outRange(x, y) || possibleMove(x, y)) {
 			return null;
 		}
-		
+
 		whichDirection(x, y);
 
 		moved = true;
@@ -50,9 +48,9 @@ public class Pawn extends Chesspiece {
 	}
 
 	private void diagonal(int x, int y) {
-		if(x < this.x) 
+		if (x < this.x)
 			leftUpDiagonal(x);
-		 else 
+		else
 			rightUpDiagonal(x);
 	}
 
@@ -62,7 +60,7 @@ public class Pawn extends Chesspiece {
 			validMovesList.add(new Point(this.x - n, this.y + n));
 			n++;
 		}
-		
+
 	}
 
 	private void rightUpDiagonal(int x) {
@@ -80,39 +78,39 @@ public class Pawn extends Chesspiece {
 		return false;
 	}
 
-	private boolean possibleMove(int x, int y) {		
+	private boolean possibleMove(int x, int y) {
 		List<Point> allMoveList = new ArrayList<Point>();
-		Point move = new Point(x,y);
-		
-		allMoveList.add(new Point(this.x, this.y+1));
-		allMoveList.add(new Point(this.x+1, this.y+1));
-		allMoveList.add(new Point(this.x-1, this.y+1));
-		
-		if(moved == false) {
-			allMoveList.add(new Point(this.x, this.y+2));
+		Point move = new Point(x, y);
+
+		allMoveList.add(new Point(this.x, this.y + 1));
+		allMoveList.add(new Point(this.x + 1, this.y + 1));
+		allMoveList.add(new Point(this.x - 1, this.y + 1));
+
+		if (moved == false) {
+			allMoveList.add(new Point(this.x, this.y + 2));
 		}
-		
+
 		for (Point point : allMoveList) {
-			if(move.equals(point))
+			if (move.equals(point))
 				return false;
 		}
 
 		return true;
-		
+
 	}
-	
+
 	private Point[] listToArray() {
 		Point pointField[] = new Point[validMovesList.size()];
 		int i = 0;
 		for (Point point : validMovesList) {
-			
-			if(i == 0) {
-				i++;	
+
+			if (i == 0) {
+				i++;
 			} else {
-				pointField[i-1] = point;
+				pointField[i - 1] = point;
 				i++;
 			}
-			
+
 		}
 		validMovesList.clear();
 
