@@ -37,9 +37,17 @@ public class ChessController extends Observable implements Icontroller {
 	}
 
 	public void storeGame() {
+		
 		DAOdatabase.saveGame(gamefield.getGoverview());
 	
 	}
+	
+	@Override
+	public void retrieveGame() {
+		DAOdatabase.getAllGames();
+
+	}
+
 
 	public void move(Point start, Point goal) {
 		if (checkTurn(start)) {
@@ -90,10 +98,5 @@ public class ChessController extends Observable implements Icontroller {
 		return "NONE";
 	}
 
-	@Override
-	public void retrieveGame() {
-		// TODO Auto-generated method stub
-
-	}
-
+	
 }

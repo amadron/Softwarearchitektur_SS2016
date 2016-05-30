@@ -11,15 +11,7 @@ public interface IDataAccessObject {
 	
 	public void saveGame(PersistentGameOverview game);
 	
-	
-	
-	public void create(Object object);
-
-	public Object read();
-
-	public void update(Object object);
-
-	public void delete(Object object);
+	public void delete(String id);
 
 	public List<PersistentGameOverview> getAllGames();
 	

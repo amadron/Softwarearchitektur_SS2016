@@ -358,7 +358,7 @@ public class GameField {
 
 	public void GetJsonMoveList(JSONObject game) {
 		Object obj;
-		JSONArray moveList = new JSONArray();
+		JSONArray moveList;// = new JSONArray();
 		obj = game.get("Movelist");
 		moveList = (JSONArray) obj;
 		for (int n = 0; n < moveList.size(); n++) {
