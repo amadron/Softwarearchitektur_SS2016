@@ -13,6 +13,8 @@ import org.ektorp.http.StdHttpClient;
 import org.ektorp.impl.StdCouchDbInstance;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import htwg.se.persistence.IDataAccessObject;
 import htwg.util.Point;
@@ -103,62 +105,40 @@ public class DAOCouchDB implements IDataAccessObject {
 		return false;
 	}
 
-	public void moveList() {
+	public void moveList() { // game name Parameter
 		List<PersistentGameOverview> list = getAllGames();
+		JSONParser parser = new JSONParser();
 		List<Point> pointList = new ArrayList<Point>();
 		JSONObject jsonObject;
-		JSONObject jsonObject2;
 		JSONArray jsonArray;
 		Object obj;
+		String s;
 
-		System.out.println("befor loop");
-		
 		for (PersistentGameOverview persistentGameOverview : list) {
+			try {
+				s = persistentGameOverview.getGameOverview().toString();
+				obj = parser.parse(s);
+				jsonObject = (JSONObject) obj;
+				jsonArray = (JSONArray) jsonObject.get("Game");
 
-		jsonObject = persistentGameOverview.getGameOverview();
-		System.out.println("1" + jsonObject);
-		
-		jsonArray.toJSONString(jsonObject.get("Game"));
-		
-		obj = jsonObject.get("Game");
-		//jsonObject = (JSONObject)obj;
-		
-		JSONArray moveList = (JSONArray)obj;
-		
-		System.out.println("2");
-		
-		
-//		JSONArray moveList = new JSONArray();
-//		obj = obj.get("Movelist");
-//		moveList = (JSONArray) obj;
+			
+				jsonObject = (JSONObject) jsonArray.get(0);
+				if (jsonObject.containsValue("Marco_aaa")) {
 
-		}
+					jsonArray = (JSONArray) jsonObject.get("Movelist");
+					fillPointList(pointList, jsonArray, "From");
+					fillPointList(pointList, jsonArray, "To");
 
-		// jsonArray2 = (JSONArray) jsonArray.get(0);
-
-		// for (int n = 0; n < jsonArray2.size(); n++) {
-		// obj = jsonArray2.get(n);
-		// jsonObject2 = (JSONObject) obj;
-		// System.out.println("From: " + jsonObject2.get("From") + " To:" +
-		// jsonObject2.get("To"));
-		// }
-
-		System.out.println("after loop");
-
-		// System.out.println(json);
-		// jsonArray2 = jsonArray.toJSONString(json);
-		// JSONArray jarray = (JSONArray) json;
-		System.out.println("stop");
-
-		// jsonArray = (JSONArray)jsonObject.get("Game");
-		// jsonObject2 = (JSONObject)jsonObject.get("Game");
-		System.out.println("weiter");
-		// fillPointList(pointList, jsonArray, from);
-		// fillPointList(pointList, jsonArray, to);
-		// }
-
-		for (Point point : pointList) {
-			System.out.println(point.toString());
+					for (Point point : pointList) {
+						System.out.println(point.toString());
+					}
+				} else
+					System.out.println("Marco_aaa ist in diesem obj niht vorhanden");
+				
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 	}
