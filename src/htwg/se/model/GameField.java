@@ -28,21 +28,21 @@ public class GameField {
 	//############# Persistent
 	private String gameName = "Marco_aaa";
 
+	public String getGameName() {
+		return gameName;
+	}
+
+	public void setGameName(String gameName) {
+		this.gameName = gameName;
+	}
+
 	DAOCouchDB cdb;
 	
 	
 	private JSONObject mainObj = new JSONObject();
 	private JSONArray games = new JSONArray();
-	private JSONArray games2 = new JSONArray();
-	private JSONArray games3 = new JSONArray();
-
 	private JSONObject gameProberties = new JSONObject();
-	private JSONObject gameProberties2 = new JSONObject();
-	private JSONObject gameProberties3 = new JSONObject();
-
 	private JSONArray gameMovelist = new JSONArray();
-	private JSONArray gameMovelist2 = new JSONArray();
-	private JSONArray gameMovelist3 = new JSONArray();
 	PersistentGameOverview goverview = new PersistentGameOverview();
 
 	//##########################
@@ -332,40 +332,12 @@ public class GameField {
 		gameMovelist.add(gameMove);
 
 	}
-	
-	public void searchGameJson(String gameName) {
-
-		for (int i = 0; i < games.size(); i++) {
-			Object obj = games.get(i);
-			JSONObject game = (JSONObject) obj;
-
-			if (game.get("Gamename") == gameName) {
-				GetJsonMoveList(game);
-				break;
-			}
-		}
-
-		System.out.println(mainObj);
-	}
-	
 
 	public void createJson() {
 		mainObj.put("Game", games);
 		games.add(gameProberties);
 		gameProberties.put("Gamename", gameName);
 		gameProberties.put("Movelist", gameMovelist);
-	}
-
-	public void GetJsonMoveList(JSONObject game) {
-		Object obj;
-		JSONArray moveList;// = new JSONArray();
-		obj = game.get("Movelist");
-		moveList = (JSONArray) obj;
-		for (int n = 0; n < moveList.size(); n++) {
-			obj = moveList.get(n);
-			game = (JSONObject) obj;
-			System.out.println("From: " + game.get("From") + " To:" + game.get("To"));
-		}
 	}
 	
 	public PersistentGameOverview getGoverview() {

@@ -22,6 +22,8 @@ import htwg.util.Point;
 public class DAOCouchDB implements IDataAccessObject {
 
 	private CouchDbConnector db = null;
+	private JSONParser parser = new JSONParser();
+	private List<Point> pointList = new ArrayList<Point>();
 
 	public DAOCouchDB() {
 		try {
@@ -30,42 +32,6 @@ public class DAOCouchDB implements IDataAccessObject {
 			db = dbInstance.createConnector("uchess_db", true);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public void saveGame(PersistentGameOverview currentGame) {
-
-		if (contains(currentGame.getId())) {
-			update(currentGame);
-		} else {
-			create(currentGame);
-		}
-
-		moveList();
-	}
-
-	private void update(PersistentGameOverview currentGame) {
-		PersistentGameOverview oldGame = (PersistentGameOverview) db.find(PersistentGameOverview.class,
-				currentGame.getId());
-		oldGame.setGameOverview(currentGame.getGameOverview());
-
-		try {
-			db.update(oldGame);
-			System.out.println("Game updated");
-		} catch (org.ektorp.UpdateConflictException e) {
-			System.out.println("Already Saved exception....");
-		}
-
-	}
-
-	private void create(PersistentGameOverview currentGame) {
-		try {
-			PersistentGameOverview gameOverview = currentGame;
-			db.create(gameOverview);
-			System.out.println("Game Saved");
-		} catch (org.ektorp.UpdateConflictException e) {
-			System.out.println("Already Saved");
 		}
 	}
 
@@ -105,10 +71,8 @@ public class DAOCouchDB implements IDataAccessObject {
 		return false;
 	}
 
-	public void moveList() { // game name Parameter
+	public List<Point> read(String id) { 
 		List<PersistentGameOverview> list = getAllGames();
-		JSONParser parser = new JSONParser();
-		List<Point> pointList = new ArrayList<Point>();
 		JSONObject jsonObject;
 		JSONArray jsonArray;
 		Object obj;
@@ -119,26 +83,52 @@ public class DAOCouchDB implements IDataAccessObject {
 				s = persistentGameOverview.getGameOverview().toString();
 				obj = parser.parse(s);
 				jsonObject = (JSONObject) obj;
-				jsonArray = (JSONArray) jsonObject.get("Game");
-
-			
+				jsonArray = (JSONArray) jsonObject.get("Game");			
 				jsonObject = (JSONObject) jsonArray.get(0);
-				if (jsonObject.containsValue("Marco_aaa")) {
-
+				
+				if (jsonObject.containsValue(id)) {
 					jsonArray = (JSONArray) jsonObject.get("Movelist");
 					fillPointList(pointList, jsonArray, "From");
 					fillPointList(pointList, jsonArray, "To");
-
-					for (Point point : pointList) {
-						System.out.println(point.toString());
-					}
-				} else
-					System.out.println("Marco_aaa ist in diesem obj niht vorhanden");
+					return pointList;
+				}
 				
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		}
+		System.out.println("Marco_aaa ist in diesem obj niht vorhanden");
+		return null;
+
+	}
+
+	@Override
+	public void create(Object obj) {
+		PersistentGameOverview currentGame = (PersistentGameOverview) obj;
+		
+		if (contains(currentGame.getId())) {
+			updateGameDB(currentGame);
+		} else {
+			create(currentGame);
+		}
+		
+	}
+
+	@Override
+	public void update(Object obj) {
+		this.create(obj);
+	}
+	
+	private void updateGameDB(PersistentGameOverview currentGame) {
+		PersistentGameOverview oldGame = (PersistentGameOverview) db.find(PersistentGameOverview.class,
+		currentGame.getId());
+		oldGame.setGameOverview(currentGame.getGameOverview());
+
+		try {
+			db.update(oldGame);
+			System.out.println("Game updated");
+		} catch (org.ektorp.UpdateConflictException e) {
+			System.out.println("Already Saved exception....");
 		}
 
 	}
@@ -162,5 +152,4 @@ public class DAOCouchDB implements IDataAccessObject {
 
 		}
 	}
-
 }

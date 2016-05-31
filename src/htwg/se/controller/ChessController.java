@@ -1,6 +1,7 @@
 package htwg.se.controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import com.google.gson.JsonIOException;
 import com.google.inject.Inject;
@@ -16,6 +17,7 @@ import htwg.util.Point;
 public class ChessController extends Observable implements Icontroller {
 	private GameField gamefield;
 	private boolean blackturn;
+	private List<Point> movelist;
 	
 	@Inject
 	private IDataAccessObject DAOdatabase;
@@ -38,14 +40,20 @@ public class ChessController extends Observable implements Icontroller {
 
 	public void storeGame() {
 		
-		DAOdatabase.saveGame(gamefield.getGoverview());
+		DAOdatabase.create(gamefield.getGoverview());
+		
+		
+		retrieveGame();
 	
 	}
 	
 	@Override
 	public void retrieveGame() {
-		DAOdatabase.getAllGames();
-
+		movelist = DAOdatabase.read(gamefield.getGameName());
+		
+		for(int i=0; i<movelist.size()/2; ++i) {
+			move(movelist.get(i),movelist.get(i+1));
+		}
 	}
 
 

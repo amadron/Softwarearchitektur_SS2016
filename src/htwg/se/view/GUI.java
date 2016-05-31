@@ -107,7 +107,6 @@ public class GUI implements UI, IObserver, ActionListener {
 					figure += field[x][y].getChessPiece().toChar();
 					figure += buttons[x][y].getFieldColor();
 					figure += ".jpg";
-					// System.out.println(figure);
 					setButtonImage(y, x, figure);
 					figure = "";
 				}
@@ -161,8 +160,16 @@ public class GUI implements UI, IObserver, ActionListener {
 		} else if (e.getSource() == this.buttonExit) {
 			System.exit(0);
 		} else if (e.getSource() == this.buttonStore) {
-			// controller.searchGameJson("Marco_Bene");
-			controller.storeGame();
+			//controller.storeGame();
+			//controller.retrieveGame();
+			//controller.move(new Point(3,6), new Point(4,6));
+			//controller.move(new Point(1,1), new Point(2,1));
+			pressed(3,6);
+			pressed(4,6);
+			pressed(1,1);
+			pressed(2,1);
+			drawField();
+			System.out.println("draw");
 		} else if (e.getSource() == this.buttonRetrieve) {
 			System.out.println("retrieve");
 			controller.retrieveGame();
