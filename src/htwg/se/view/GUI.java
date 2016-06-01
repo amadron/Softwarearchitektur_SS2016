@@ -14,6 +14,8 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 
 import htwg.se.controller.Icontroller;
@@ -23,7 +25,12 @@ import htwg.util.IObserver;
 import htwg.util.Point;
 
 public class GUI implements UI, IObserver, ActionListener {
-
+	
+	JMenuBar menuBar = new JMenuBar();
+	JMenu saveMenu = new JMenu( "Save" );
+	JMenu loadMenu = new JMenu( "Load" );
+	
+	
 	static final Logger log = Logger.getLogger(GUI.class.getName());
 	Icontroller controller;
 	ChessButton buttons[][];
@@ -69,16 +76,24 @@ public class GUI implements UI, IObserver, ActionListener {
 		meinFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		meinFrame.setSize(900, 900);
 		meinFrame.add(panel);
+		
+		
+		meinFrame.setJMenuBar(menuBar);
 
 		initField();
 		drawField();
 
-		panelScore.add(buttonStore);
-		// panelGameField.add(buttonRetrieve);
+		//panelScore.add(buttonStore);
+		//panelScore.add(buttonRetrieve);
+		//panelGameField.add(buttonRetrieve);
+		
+		menuBar.add( saveMenu );
+		menuBar.add( loadMenu );
 
 		meinFrame.setVisible(true);
 		meinFrame.repaint();
-
+		
+		
 	}
 
 	private void initField() {
@@ -91,7 +106,11 @@ public class GUI implements UI, IObserver, ActionListener {
 				panelGameField.add(buttons[x][y]);
 			}
 		}
+		
+		saveMenu.addActionListener(this);
+		loadMenu.addActionListener(this);
 		buttonStore.addActionListener(this);
+		//buttonRetrieve.addActionListener(this);
 	}
 
 	private void drawField() {
@@ -159,22 +178,11 @@ public class GUI implements UI, IObserver, ActionListener {
 			restart();
 		} else if (e.getSource() == this.buttonExit) {
 			System.exit(0);
-		} else if (e.getSource() == this.buttonStore) {
-			//controller.storeGame();
-			//controller.retrieveGame();
-			//controller.move(new Point(3,6), new Point(4,6));
-			//controller.move(new Point(1,1), new Point(2,1));
-			pressed(3,6);
-			pressed(4,6);
-			pressed(1,1);
-			pressed(2,1);
-			drawField();
-			System.out.println("draw");
-		} else if (e.getSource() == this.buttonRetrieve) {
-			System.out.println("retrieve");
+		} else if (e.getSource() == this.saveMenu) {
+			controller.storeGame();
+		} else if (e.getSource() == this.loadMenu) {
 			controller.retrieveGame();
 		}
-
 		if (e.getSource() == this.buttonStore || e.getSource() == this.buttonRetrieve) {
 			return;
 		}

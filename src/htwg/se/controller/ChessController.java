@@ -52,7 +52,8 @@ public class ChessController extends Observable implements Icontroller {
 		movelist = DAOdatabase.read(gamefield.getGameName());
 		
 		for(int i=0; i<movelist.size()/2; ++i) {
-			move(movelist.get(i),movelist.get(i+1));
+			System.out.println(" move list entry 1: " + movelist.get(i) + "  entry 2: " + movelist.get(i+1));
+			move(movelist.get(i),movelist.get(i+(movelist.size()/2)));
 		}
 	}
 
