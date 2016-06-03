@@ -161,13 +161,16 @@ public class GUI implements UI, IObserver, ActionListener {
 			System.exit(0);
 		} else if (e.getSource() == this.buttonStore) {
 			//controller.storeGame();
+			
 			//controller.retrieveGame();
 			//controller.move(new Point(3,6), new Point(4,6));
 			//controller.move(new Point(1,1), new Point(2,1));
-			pressed(3,6);
-			pressed(4,6);
-			pressed(1,1);
-			pressed(2,1);
+			
+			controller.emptyField();
+//			pressed(3,6);
+//			pressed(4,6);
+//			pressed(1,1);
+//			pressed(2,1);
 			drawField();
 			System.out.println("draw");
 		} else if (e.getSource() == this.buttonRetrieve) {

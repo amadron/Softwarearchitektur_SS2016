@@ -1,11 +1,8 @@
 package htwg.se.controller;
 
-import java.io.IOException;
 import java.util.List;
 
-import com.google.gson.JsonIOException;
 import com.google.inject.Inject;
-
 import htwg.se.model.Chesspiece;
 import htwg.se.model.Field;
 import htwg.se.model.GameField;
@@ -31,6 +28,11 @@ public class ChessController extends Observable implements Icontroller {
 	public Field[][] getField() {
 		return gamefield.getField();
 	}
+	
+	public void emptyField() {
+		gamefield.setField();
+	}
+
 
 	public String getStatusMessage() {
 		if (blackturn)
@@ -60,6 +62,7 @@ public class ChessController extends Observable implements Icontroller {
 	public void move(Point start, Point goal) {
 		if (checkTurn(start)) {
 			if (gamefield.moveCheck(start, goal)) {
+				System.out.println("moveCheck true");
 				gamefield.moveAfterCheck(start, goal);
 				blackturn = (!blackturn);
 			}

@@ -21,4 +21,6 @@ public interface Icontroller extends IObservable {
 
 	public String getWinner();
 
+	public void emptyField();
+
 }
