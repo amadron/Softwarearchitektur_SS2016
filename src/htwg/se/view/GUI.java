@@ -6,7 +6,7 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.util.logging.Logger;
+//import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -14,6 +14,9 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
 import htwg.se.controller.Icontroller;
@@ -24,7 +27,12 @@ import htwg.util.Point;
 
 public class GUI implements UI, IObserver, ActionListener {
 
-	static final Logger log = Logger.getLogger(GUI.class.getName());
+	JMenuBar menueLeiste = new JMenuBar();
+	JMenu datei;
+	JMenuItem save;
+	JMenuItem load;
+
+	// static final Logger log = Logger.getLogger(GUI.class.getName());
 	Icontroller controller;
 	ChessButton buttons[][];
 	JFrame meinFrame;
@@ -42,11 +50,22 @@ public class GUI implements UI, IObserver, ActionListener {
 	JPanel panelGameOver = new JPanel();
 	JButton buttonExit = new JButton("Beenden");
 	JButton buttonReset = new JButton("neustart");
-
-	JButton buttonStore = new JButton("Store");
-	JButton buttonRetrieve = new JButton("retrieve");
+	JMenuItem saveMenuItem;
+	JMenuItem loadMenuItem;
 
 	public GUI(Icontroller cc) {
+
+		JMenuBar bar = new JMenuBar();
+		JMenu menu = new JMenu("Datei");
+
+		saveMenuItem = new JMenuItem("Save");
+		loadMenuItem = new JMenuItem("Load");
+
+		saveMenuItem.addActionListener(this);
+		loadMenuItem.addActionListener(this);
+		menu.add(saveMenuItem);
+		menu.add(loadMenuItem);
+		bar.add(menu);
 
 		controller = cc;
 		controller.addObserver(this);
@@ -73,9 +92,10 @@ public class GUI implements UI, IObserver, ActionListener {
 		initField();
 		drawField();
 
-		panelScore.add(buttonStore);
-		// panelGameField.add(buttonRetrieve);
+		datei = new JMenu("Datei");
+		menueLeiste.add(datei);
 
+		meinFrame.setJMenuBar(bar);
 		meinFrame.setVisible(true);
 		meinFrame.repaint();
 
@@ -91,7 +111,7 @@ public class GUI implements UI, IObserver, ActionListener {
 				panelGameField.add(buttons[x][y]);
 			}
 		}
-		buttonStore.addActionListener(this);
+
 	}
 
 	private void drawField() {
@@ -159,26 +179,12 @@ public class GUI implements UI, IObserver, ActionListener {
 			restart();
 		} else if (e.getSource() == this.buttonExit) {
 			System.exit(0);
-		} else if (e.getSource() == this.buttonStore) {
-			//controller.storeGame();
-			
-			//controller.retrieveGame();
-			//controller.move(new Point(3,6), new Point(4,6));
-			//controller.move(new Point(1,1), new Point(2,1));
-			
-			controller.emptyField();
-//			pressed(3,6);
-//			pressed(4,6);
-//			pressed(1,1);
-//			pressed(2,1);
-			drawField();
-			System.out.println("draw");
-		} else if (e.getSource() == this.buttonRetrieve) {
-			System.out.println("retrieve");
+		} else if (e.getSource() == this.saveMenuItem) {
+			controller.storeGame();
+			return;
+		} else if (e.getSource() == this.loadMenuItem) {
+			controller.reset();
 			controller.retrieveGame();
-		}
-
-		if (e.getSource() == this.buttonStore || e.getSource() == this.buttonRetrieve) {
 			return;
 		}
 

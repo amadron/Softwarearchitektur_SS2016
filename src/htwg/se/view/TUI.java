@@ -11,10 +11,10 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
+//import java.util.logging.Logger;
 
 public class TUI implements UI, IObserver {
-	static final Logger log = Logger.getLogger(TUI.class.getName());
+	//static final Logger log = Logger.getLogger(TUI.class.getName());
 
 	Icontroller controller;
 	boolean firstpressed;
@@ -163,7 +163,7 @@ public class TUI implements UI, IObserver {
 	}
 
 	public void message(String text) {
-		log.info("\n" + text);
+		//log.info("\n" + text);
 
 	}
 

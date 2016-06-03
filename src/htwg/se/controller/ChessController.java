@@ -1,7 +1,6 @@
 package htwg.se.controller;
 
 import java.util.List;
-
 import com.google.inject.Inject;
 import htwg.se.model.Chesspiece;
 import htwg.se.model.Field;
@@ -28,11 +27,6 @@ public class ChessController extends Observable implements Icontroller {
 	public Field[][] getField() {
 		return gamefield.getField();
 	}
-	
-	public void emptyField() {
-		gamefield.setField();
-	}
-
 
 	public String getStatusMessage() {
 		if (blackturn)
@@ -54,7 +48,7 @@ public class ChessController extends Observable implements Icontroller {
 		movelist = DAOdatabase.read(gamefield.getGameName());
 		
 		for(int i=0; i<movelist.size()/2; ++i) {
-			move(movelist.get(i),movelist.get(i+1));
+			move(movelist.get(i),movelist.get(i+(movelist.size()/2)));
 		}
 	}
 
@@ -62,7 +56,6 @@ public class ChessController extends Observable implements Icontroller {
 	public void move(Point start, Point goal) {
 		if (checkTurn(start)) {
 			if (gamefield.moveCheck(start, goal)) {
-				System.out.println("moveCheck true");
 				gamefield.moveAfterCheck(start, goal);
 				blackturn = (!blackturn);
 			}
@@ -82,7 +75,7 @@ public class ChessController extends Observable implements Icontroller {
 	}
 
 	public void reset() {
-		gamefield = new GameField();
+		gamefield.setInitField();
 		blackturn = true;
 		notifyObservers();
 	}

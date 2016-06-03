@@ -1,8 +1,8 @@
 package htwg.se.model;
 
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-
 import htwg.se.persistence.CouchDB.DAOCouchDB;
 import htwg.se.persistence.CouchDB.PersistentGameOverview;
 import htwg.util.Point;
@@ -18,7 +18,7 @@ public class GameField {
 	private Bishop blackBishops[];
 	private Bishop whiteBishops[];
 	private Field field[][];
-	private Field empty[][];
+	private Field initField[][];
 	private Queen blackQueen;
 	private Queen whiteQueen;
 	private King blackKing;
@@ -48,7 +48,7 @@ public class GameField {
 
 	public GameField() {
 		field = new Field[8][8];
-		empty = new Field[8][8];
+		initField = new Field[8][8];
 		initField();
 		blackPawns = new Pawn[8];
 		whitePawns = new Pawn[8];
@@ -66,15 +66,23 @@ public class GameField {
 		intiKings();
 		initQueens();
 		createJson();
+		initField = field;
 	}
 
 	private void initField() {
 		for (int x = 0; x < 8; ++x) {
 			for (int y = 0; y < 8; ++y) {
 				field[x][y] = new Field(new Point(x, y));
-				empty[x][y] = new Field(new Point(x, y));
 			}
 		}
+	}
+
+	public Field[][] getInitField() {
+		return initField;
+	}
+
+	public void setInitField() {
+		this.field = initField;
 	}
 
 	private void initWhitePawns() {
@@ -146,10 +154,6 @@ public class GameField {
 
 	public Field[][] getField() {
 		return this.field;
-	}
-	
-	public void setField() {
-		this.field = empty;
 	}
 
 	public boolean moveCheck(Point from, Point to) {
