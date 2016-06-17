@@ -3,11 +3,15 @@ package htwg.se.persistence.hibernate;
 /**
  * Created by benedict on 25.05.16.
  */
-import 
+import javax.persistence.*;
+import java.io.Serializable;
 
-public class HibernateObject {
-
+@Entity
+@Table(name = "Turns")
+public class HibernateObject implements Serializable {
+    @Id
     String id;
+    @Column(name = "moves")
     String moves;
 
     public HibernateObject(){
