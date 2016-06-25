@@ -24,6 +24,7 @@ public class GameField {
 	private King blackKing;
 	private King whiteKing;
 	
+
 	//############# Persistent
 	private String gameName = "Marco_aaa";
 
@@ -36,20 +37,18 @@ public class GameField {
 	}
 
 	DAOCouchDB cdb;
-	
-	
-	private JSONObject mainObj = new JSONObject();
-	private JSONArray games = new JSONArray();
-	private JSONObject gameProberties = new JSONObject();
-	private JSONArray gameMovelist = new JSONArray();
-	PersistentGameOverview goverview = new PersistentGameOverview();
+	private JSONObject mainObj;
+	private JSONArray games;
+	private JSONObject gameProberties;
+	private JSONArray gameMovelist;
+	PersistentGameOverview goverview;
+	private boolean load;
 
 	//##########################
 
 	public GameField() {
 		field = new Field[8][8];
 		initField = new Field[8][8];
-		initField();
 		blackPawns = new Pawn[8];
 		whitePawns = new Pawn[8];
 		blackTowers = new Tower[2];
@@ -58,21 +57,16 @@ public class GameField {
 		whiteKnights = new Knight[2];
 		blackBishops = new Bishop[2];
 		whiteBishops = new Bishop[2];
-		initWhitePawns();
-		initBlackPawns();
-		initTowers();
-		initKnights();
-		initBishops();
-		intiKings();
-		initQueens();
-		createJson();
-		initField = field;
+		jsonInit();
+		setInitField();
+
 	}
 
 	private void initField() {
 		for (int x = 0; x < 8; ++x) {
 			for (int y = 0; y < 8; ++y) {
 				field[x][y] = new Field(new Point(x, y));
+				initField[x][y] = new Field(new Point(x, y));
 			}
 		}
 	}
@@ -82,7 +76,16 @@ public class GameField {
 	}
 
 	public void setInitField() {
-		this.field = initField;
+		initField();
+		initWhitePawns();
+		initBlackPawns();
+		initTowers();
+		initKnights();
+		initBishops();
+		intiKings();
+		initQueens();
+		createJson();
+		
 	}
 
 	private void initWhitePawns() {
@@ -330,7 +333,11 @@ public class GameField {
 		cp.setmovedTrue();
 		targetField.setChessPiece(cp);
 		fromField.setChessPiece(null);
-		addJsonMove(from, to);
+		if(!load){
+			addJsonMove(from, to);
+		}
+		
+		
 		
 	}
 
@@ -354,5 +361,13 @@ public class GameField {
 		goverview.setId(gameName);
 		goverview.setGameOverview(mainObj);
 		return goverview;
+	}
+
+	public void jsonInit() {
+		mainObj = new JSONObject();
+		games = new JSONArray();
+		gameProberties = new JSONObject();
+		gameMovelist = new JSONArray();
+		goverview = new PersistentGameOverview();	
 	}
 }

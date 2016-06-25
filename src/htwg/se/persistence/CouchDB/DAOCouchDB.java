@@ -4,7 +4,6 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import htwg.se.persistence.PersistenceUtil;
 import org.ektorp.CouchDbConnector;
 import org.ektorp.CouchDbInstance;
 import org.ektorp.DocumentNotFoundException;
@@ -47,10 +46,10 @@ public class DAOCouchDB implements IDataAccessObject {
 
 	}
 
-	public List getAllGames() {
+	public List<Object> getAllGames() {
 		ViewQuery query = new ViewQuery().allDocs().includeDocs(true);
 
-		List<PersistentGameOverview> gameList = new ArrayList<PersistentGameOverview>();
+		List<Object> gameList = new ArrayList<Object>();
 		for (PersistentGameOverview persGamefield : db.queryView(query, PersistentGameOverview.class)) {
 			gameList.add(persGamefield);
 		}
@@ -60,11 +59,12 @@ public class DAOCouchDB implements IDataAccessObject {
 
 	@Override
 	public boolean contains(String id) {
-		List<PersistentGameOverview> list;
-		list = getAllGames();
+		List<Object> list;
+		list = (List<Object>) getAllGames();
 
-		for (PersistentGameOverview persistentGameOverview : list) {
-			if (persistentGameOverview.getId().equals(id)) {
+		for (Object persistentGameOverview : list) {
+			PersistentGameOverview pobj = (PersistentGameOverview) persistentGameOverview;
+			if (pobj.getId().equals(id)) {
 				return true;
 			}
 
@@ -73,24 +73,27 @@ public class DAOCouchDB implements IDataAccessObject {
 	}
 
 	public List<Point> read(String id) { 
-		List<PersistentGameOverview> list = getAllGames();
+		pointList.clear();
+		List<Object> list = getAllGames();
 		JSONObject jsonObject;
 		JSONArray jsonArray;
 		Object obj;
 		String s;
 
-		for (PersistentGameOverview persistentGameOverview : list) {
+		for (Object persistentGameOverview : list) {
 			try {
-				s = persistentGameOverview.getGameOverview().toString();
+				PersistentGameOverview pobj = (PersistentGameOverview) persistentGameOverview;
+				s = pobj.getGameOverview().toString();
 				obj = parser.parse(s);
 				jsonObject = (JSONObject) obj;
 				jsonArray = (JSONArray) jsonObject.get("Game");			
 				jsonObject = (JSONObject) jsonArray.get(0);
 				
 				if (jsonObject.containsValue(id)) {
+					System.out.println(jsonObject.toString());
 					jsonArray = (JSONArray) jsonObject.get("Movelist");
-					PersistenceUtil.fillPointList(pointList, jsonArray, "From");
-					PersistenceUtil.fillPointList(pointList, jsonArray, "To");
+					fillPointList(pointList, jsonArray, "From");
+					fillPointList(pointList, jsonArray, "To");
 					return pointList;
 				}
 				
@@ -134,5 +137,23 @@ public class DAOCouchDB implements IDataAccessObject {
 
 	}
 
+	private void fillPointList(List<Point> pointList, JSONArray jobj2, String from) {
+		JSONObject jsonPoint;
+		String tmp;
+		String[] parts;
+		int tmp1;
+		int tmp2;
+		for (int i = 0; i < jobj2.size(); ++i) {
+			jsonPoint = (JSONObject) jobj2.get(i);
 
+			tmp = (String) jsonPoint.get(from);
+			parts = tmp.split("_");
+
+			tmp1 = Integer.parseInt(parts[0]);
+			tmp2 = Integer.parseInt(parts[1]);
+
+			pointList.add(new Point(tmp1, tmp2));
+
+		}
+	}
 }
