@@ -39,16 +39,17 @@ public class ChessController extends Observable implements Icontroller {
 		DAOdatabase.create(gamefield.getGoverview());
 		
 		
-		retrieveGame();
+		//retrieveGame();
 	
 	}
 	
 	@Override
 	public void retrieveGame() {
+		this.reset();
 		movelist = DAOdatabase.read(gamefield.getGameName());
-		
+		System.out.println(movelist.toString());
 		for(int i=0; i<movelist.size()/2; ++i) {
-			move(movelist.get(i),movelist.get(i+(movelist.size()/2)));
+		 	move(movelist.get(i),movelist.get(i+(movelist.size()/2)));
 		}
 	}
 
