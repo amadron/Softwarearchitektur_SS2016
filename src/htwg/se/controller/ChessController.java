@@ -1,20 +1,34 @@
 package htwg.se.controller;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import akka.actor.ActorRef;
+import akka.actor.ActorSystem;
+import akka.actor.Props;
+import akka.pattern.Patterns;
+import akka.util.Timeout;
 import com.google.inject.Inject;
+import htwg.se.actor.MasterActor;
+import htwg.se.actor.TurnActor;
 import htwg.se.model.Chesspiece;
 import htwg.se.model.Field;
 import htwg.se.model.GameField;
 import htwg.se.persistence.IDataAccessObject;
 import htwg.util.Observable;
 import htwg.util.Point;
+import scala.concurrent.Await;
+import scala.concurrent.Future;
 
 
 public class ChessController extends Observable implements Icontroller {
 	private GameField gamefield;
 	private boolean blackturn;
 	private List<Point> movelist;
-	
+	static final Timeout TIMEOUT = new Timeout(60, TimeUnit.SECONDS);
+	private ActorSystem actorSys;
+	ActorRef master;
+
 	@Inject
 	private IDataAccessObject DAOdatabase;
 	
@@ -22,6 +36,8 @@ public class ChessController extends Observable implements Icontroller {
 	public ChessController(GameField gamefield) {
 		this.gamefield = gamefield;
 		blackturn = true;
+		actorSys = actorSys.create("uChessActorSystem");
+		master = actorSys.actorOf(Props.create(MasterActor.class), "gameMaster");
 	}
 
 	public Field[][] getField() {
@@ -36,7 +52,6 @@ public class ChessController extends Observable implements Icontroller {
 
 	public void storeGame() {
 		
-		// DAOdatabase.create(gamefield.getGoverview()); Couch DB
 		DAOdatabase.create(gamefield.getHibernateObj());
 		
 		
@@ -57,9 +72,20 @@ public class ChessController extends Observable implements Icontroller {
 
 	public void move(Point start, Point goal) {
 		if (checkTurn(start)) {
-			if (gamefield.moveCheck(start, goal)) {
-				gamefield.moveAfterCheck(start, goal);
-				blackturn = (!blackturn);
+			TurnActor.TurnMessage msg = new TurnActor.TurnMessage(start, goal, gamefield);
+			Future<Object> fut = Patterns.ask(master, msg, TIMEOUT);
+			try {
+				Object result = Await.result(fut, TIMEOUT.duration());
+				if(result instanceof Boolean)
+				{
+					Boolean check = (Boolean) result;
+					if (check) {
+						gamefield.moveAfterCheck(start, goal);
+						blackturn = (!blackturn);
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 
