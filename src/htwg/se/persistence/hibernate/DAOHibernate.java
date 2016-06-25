@@ -33,7 +33,7 @@ public class DAOHibernate implements IDataAccessObject {
             Criteria criteria = session.createCriteria(HibernateObject.class).add(Restrictions.like("id", obj.getId()));
             List crit = criteria.list();
             if (crit.size() > 0) {
-                session.update(object);
+                update(object);
             } else {
                 session.save(object);
             }

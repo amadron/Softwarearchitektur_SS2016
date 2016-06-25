@@ -31,7 +31,7 @@ public class HibernateTest {
         mv2.put("To", to);
         moves.add(mv);
         moves.add(mv2);
-        movelist.put("Movelist", moves);
+        //movelist.put("Movelist", moves);
         test1.setMoves(movelist);
         DAOHibernate dao = new DAOHibernate();
         testCreate(test1, dao);
@@ -39,9 +39,10 @@ public class HibernateTest {
 
     public static void testCreate(HibernateObject object, DAOHibernate dao)
     {
-        dao.delete(object.getId());
-        dao.create(object);
-        java.util.List<Point> ret = dao.read(object.getId());
+        //dao.delete(object.getId());
+        //dao.create(object);
+
+        java.util.List<Point> ret = dao.read("Marco_aaa");
         if(ret != null) {
             System.out.println("Database contains object! Moves: " + ret.toString());
         } else {
