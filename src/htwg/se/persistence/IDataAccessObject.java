@@ -20,7 +20,7 @@ public interface IDataAccessObject {
 			
 	public void delete(String id);
 
-	public List getAllGames();
+	public List<Object> getAllGames();
 	
 	boolean contains(String id);
 

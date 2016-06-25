@@ -1,14 +1,17 @@
 package htwg.se.persistence.hibernate;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import htwg.se.persistence.CouchDB.PersistentGameOverview;
 import htwg.se.persistence.IDataAccessObject;
+import htwg.se.persistence.PersistenceUtil;
 import htwg.util.Point;
-import org.hibernate.Criteria;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
+import org.hibernate.*;
 import org.hibernate.criterion.Restrictions;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -26,7 +29,15 @@ public class DAOHibernate implements IDataAccessObject {
         try {
             session = HibernateUtil.getInstance().getCurrentSession();
             transact = session.beginTransaction();
-            session.save(object);
+            HibernateObject obj = (HibernateObject) object;
+            Criteria criteria = session.createCriteria(HibernateException.class).add(Restrictions.like("id", obj));
+            if(criteria.list().size() > 0)
+            {
+                session.update(object);
+            }
+            else {
+                session.save(object);
+            }
             transact.commit();
             //Session close
         } catch (HibernateException ex) {
@@ -34,9 +45,6 @@ public class DAOHibernate implements IDataAccessObject {
         }
     }
 
-
-    //@Todo what if many have the same id
-    //@Todo resemble points
     @Override
     public List<Point> read(String id) {
         try {
@@ -45,10 +53,16 @@ public class DAOHibernate implements IDataAccessObject {
             Criteria criteria = session.createCriteria(HibernateObject.class);
             List result = criteria.add(Restrictions.like("id", id)).list();
             transact.commit();
-            //session.close();
-            if (result.size() > 0) {
-                return result;
+            LinkedList<Point> points = null;
+            if(result.size() > 0) {
+                HibernateObject obj = (HibernateObject) result.get(0);
+                points = new LinkedList<Point>();
+                JSONObject mvs = (JSONObject) obj.getMoves();
+                
+
             }
+            return points;
+            //session.close();
         } catch (HibernateException ex) {
             errorHandling(ex, transact);
         }
@@ -109,7 +123,7 @@ public class DAOHibernate implements IDataAccessObject {
         try {
             session = HibernateUtil.getInstance().getCurrentSession();
             transact = session.beginTransaction();
-            Criteria criteria = session.createCriteria(HibernateObject.class);
+            Criteria criteria = session.createCriteria(HibernateObject.class).add( Restrictions.like("id", id));
             List list = criteria.list();
             transact.commit();
             //session.close();
