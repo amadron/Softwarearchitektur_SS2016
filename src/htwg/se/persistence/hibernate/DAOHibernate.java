@@ -10,6 +10,7 @@ import org.hibernate.*;
 import org.hibernate.criterion.Restrictions;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -22,70 +23,59 @@ import java.util.List;
 public class DAOHibernate implements IDataAccessObject {
     Session session;
     Transaction transact;
+    JSONParser parser = new JSONParser();
 
-    //@Todo: CHeck, if it exist and overwrite it if it exist?
     @Override
     public void create(Object object) {
-        try {
             session = HibernateUtil.getInstance().getCurrentSession();
             transact = session.beginTransaction();
             HibernateObject obj = (HibernateObject) object;
-            Criteria criteria = session.createCriteria(HibernateException.class).add(Restrictions.like("id", obj));
-            if(criteria.list().size() > 0)
-            {
+            Criteria criteria = session.createCriteria(HibernateObject.class).add(Restrictions.like("id", obj.getId()));
+            List crit = criteria.list();
+            if (crit.size() > 0) {
                 session.update(object);
-            }
-            else {
+            } else {
                 session.save(object);
             }
             transact.commit();
-            //Session close
-        } catch (HibernateException ex) {
-            errorHandling(ex, transact);
-        }
+            //session.close();
     }
 
     @Override
     public List<Point> read(String id) {
-        try {
             session = HibernateUtil.getInstance().getCurrentSession();
             transact = session.beginTransaction();
             Criteria criteria = session.createCriteria(HibernateObject.class);
             List result = criteria.add(Restrictions.like("id", id)).list();
             transact.commit();
             LinkedList<Point> points = null;
-            if(result.size() > 0) {
+            if (result.size() > 0) {
                 HibernateObject obj = (HibernateObject) result.get(0);
                 points = new LinkedList<Point>();
-                JSONObject mvs = (JSONObject) obj.getMoves();
-                
-
+                JSONObject mv = obj.getMoves();
+                System.out.println("Moves: " + mv.toJSONString());
+                JSONArray moves = new JSONArray();
+                moves = (JSONArray) mv.get("Movelist");
+                PersistenceUtil.fillPointList(points, moves, "From");
+                PersistenceUtil.fillPointList(points, moves, "To");
             }
-            return points;
             //session.close();
-        } catch (HibernateException ex) {
-            errorHandling(ex, transact);
-        }
-        return null;
+            return points;
     }
 
 
     @Override
     public void update(Object object) {
-        try {
             session = HibernateUtil.getInstance().getCurrentSession();
             transact = session.beginTransaction();
-            session.update(object);
+            session.delete(object);
+            session.save(object);
             transact.commit();
             //session.close();
-        } catch (HibernateException ex) {
-            errorHandling(ex, transact);
-        }
     }
 
     @Override
     public void delete(String id) {
-        try {
             session = HibernateUtil.getInstance().getCurrentSession();
             transact = session.beginTransaction();
             Criteria criteria = session.createCriteria(HibernateObject.class);
@@ -95,15 +85,11 @@ public class DAOHibernate implements IDataAccessObject {
             }
             transact.commit();
             //session.close();
-        } catch (HibernateException ex) {
-            errorHandling(ex, transact);
-        }
     }
 
 
     @Override
     public List getAllGames() {
-        try {
             session = HibernateUtil.getInstance().getCurrentSession();
             transact = session.beginTransaction();
             Criteria criteria = session.createCriteria(HibernateObject.class);
@@ -111,34 +97,22 @@ public class DAOHibernate implements IDataAccessObject {
             transact.commit();
             //session.close();
             return result;
-        } catch (HibernateException ex) {
-            errorHandling(ex, transact);
-        }
-        return null;
     }
 
     //@Todo
     @Override
     public boolean contains(String id) {
-        try {
             session = HibernateUtil.getInstance().getCurrentSession();
             transact = session.beginTransaction();
-            Criteria criteria = session.createCriteria(HibernateObject.class).add( Restrictions.like("id", id));
+            Criteria criteria = session.createCriteria(HibernateObject.class).add(Restrictions.like("id", id));
             List list = criteria.list();
             transact.commit();
             //session.close();
-            if(list.size() > 0)
-            {
+            if (list.size() > 0) {
                 return true;
-            }
-            else
-            {
+            } else {
                 return false;
             }
-        } catch (HibernateException ex) {
-            errorHandling(ex, transact);
-        }
-        return false;
     }
 
     public void errorHandling(HibernateException ex, Transaction transact) {
@@ -150,5 +124,6 @@ public class DAOHibernate implements IDataAccessObject {
                 System.exit(-1);
             }
         throw new RuntimeException(ex.getMessage());
+
     }
 }

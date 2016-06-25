@@ -4,6 +4,7 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import htwg.se.persistence.PersistenceUtil;
 import org.ektorp.CouchDbConnector;
 import org.ektorp.CouchDbInstance;
 import org.ektorp.DocumentNotFoundException;
@@ -46,7 +47,7 @@ public class DAOCouchDB implements IDataAccessObject {
 
 	}
 
-	public List<PersistentGameOverview> getAllGames() {
+	public List getAllGames() {
 		ViewQuery query = new ViewQuery().allDocs().includeDocs(true);
 
 		List<PersistentGameOverview> gameList = new ArrayList<PersistentGameOverview>();
@@ -88,8 +89,8 @@ public class DAOCouchDB implements IDataAccessObject {
 				
 				if (jsonObject.containsValue(id)) {
 					jsonArray = (JSONArray) jsonObject.get("Movelist");
-					fillPointList(pointList, jsonArray, "From");
-					fillPointList(pointList, jsonArray, "To");
+					PersistenceUtil.fillPointList(pointList, jsonArray, "From");
+					PersistenceUtil.fillPointList(pointList, jsonArray, "To");
 					return pointList;
 				}
 				
@@ -133,23 +134,5 @@ public class DAOCouchDB implements IDataAccessObject {
 
 	}
 
-	private void fillPointList(List<Point> pointList, JSONArray jobj2, String from) {
-		JSONObject jsonPoint;
-		String tmp;
-		String[] parts;
-		int tmp1;
-		int tmp2;
-		for (int i = 0; i < jobj2.size(); ++i) {
-			jsonPoint = (JSONObject) jobj2.get(i);
 
-			tmp = (String) jsonPoint.get(from);
-			parts = tmp.split("_");
-
-			tmp1 = Integer.parseInt(parts[0]);
-			tmp2 = Integer.parseInt(parts[1]);
-
-			pointList.add(new Point(tmp1, tmp2));
-
-		}
-	}
 }

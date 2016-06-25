@@ -1,18 +1,23 @@
 package htwg.se.persistence.hibernate;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
+import javax.persistence.*;
+import java.io.Serializable;
+
 
 /**
  * Created by benedict on 25.05.16.
  */
-import javax.persistence.*;
-import java.io.Serializable;
-
 @Entity
 @Table(name = "Turns")
 public class HibernateObject implements Serializable {
+
     @Id
-    String id;
+    private String id;
+
     @Column(name = "moves")
-    String moves;
+    private String moves;
 
     public HibernateObject(){
 
@@ -26,11 +31,16 @@ public class HibernateObject implements Serializable {
         return id;
     }
 
-    public void setMoves(String moves){
-        this.moves = moves;
+    public void setMoves(JSONObject moves){
+        this.moves = moves.toJSONString();
     }
 
-    public String getMoves(){
-        return moves;
+    public JSONObject getMoves(){
+        try {
+            return (JSONObject) new JSONParser().parse(this.moves);
+        } catch(Exception e)
+        {
+            throw new IllegalArgumentException();
+        }
     }
 }
