@@ -10,7 +10,8 @@ public class ChessModule extends AbstractModule {
 	@Override
 	protected void configure() {
 		bind(Icontroller.class).to(htwg.se.controller.ChessController.class);
-		bind(IDataAccessObject.class).to(htwg.se.persistence.CouchDB.DAOCouchDB.class);
+		//bind(IDataAccessObject.class).to(htwg.se.persistence.CouchDB.DAOCouchDB.class);
+		bind(IDataAccessObject.class).to(htwg.se.persistence.hibernate.DAOHibernate.class);
 	}
 
 }

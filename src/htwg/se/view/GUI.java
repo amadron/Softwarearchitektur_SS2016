@@ -183,7 +183,6 @@ public class GUI implements UI, IObserver, ActionListener {
 			controller.storeGame();
 			return;
 		} else if (e.getSource() == this.loadMenuItem) {
-			controller.reset();
 			controller.retrieveGame();
 			return;
 		}

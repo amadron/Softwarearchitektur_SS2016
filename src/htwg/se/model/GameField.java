@@ -5,6 +5,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import htwg.se.persistence.CouchDB.DAOCouchDB;
 import htwg.se.persistence.CouchDB.PersistentGameOverview;
+import htwg.se.persistence.hibernate.HibernateObject;
 import htwg.util.Point;
 
 public class GameField {
@@ -26,7 +27,7 @@ public class GameField {
 	
 
 	//############# Persistent
-	private String gameName = "Marco_aaa";
+	private String gameName = "Marco_random";
 
 	public String getGameName() {
 		return gameName;
@@ -42,6 +43,7 @@ public class GameField {
 	private JSONObject gameProberties;
 	private JSONArray gameMovelist;
 	PersistentGameOverview goverview;
+	HibernateObject hobj;
 	private boolean load;
 
 	//##########################
@@ -361,6 +363,16 @@ public class GameField {
 		goverview.setId(gameName);
 		goverview.setGameOverview(mainObj);
 		return goverview;
+	}
+	
+	
+	public HibernateObject getHibernateObj() {
+		hobj = new HibernateObject();
+		System.out.println(mainObj);
+		hobj.setId(gameName);
+		gameProberties.remove("Gamename");
+		hobj.setMoves(gameProberties);
+		return hobj;
 	}
 
 	public void jsonInit() {
