@@ -12,7 +12,7 @@ import akka.japi.Creator;
 public class MasterActor extends UntypedActor {
 
     private final ActorRef turnHandler = getContext().actorOf(Props.create(TurnActor.class), "turnActor");
-
+    private ActorRef fut;
     public class MasterMessage {
 
     }
@@ -20,7 +20,12 @@ public class MasterActor extends UntypedActor {
     @Override
     public void onReceive(Object message) {
         if (message instanceof TurnActor.TurnMessage) {
+            fut = getSender();
             turnHandler.tell(message, getSelf());
+        }
+        else if (message instanceof Boolean)
+        {
+            fut.tell(message, getSelf());
         }
         else {
             unhandled(message);

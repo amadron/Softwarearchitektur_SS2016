@@ -25,7 +25,7 @@ public class ChessController extends Observable implements Icontroller {
 	private GameField gamefield;
 	private boolean blackturn;
 	private List<Point> movelist;
-	static final Timeout TIMEOUT = new Timeout(60, TimeUnit.SECONDS);
+	static final Timeout TIMEOUT = new Timeout(5, TimeUnit.SECONDS);
 	private ActorSystem actorSys;
 	ActorRef master;
 
