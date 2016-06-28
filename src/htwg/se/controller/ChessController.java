@@ -52,7 +52,7 @@ public class ChessController extends Observable implements Icontroller {
 
 	public void storeGame() {
 		
-		DAOdatabase.create(gamefield.getHibernateObj());
+		DAOdatabase.create(gamefield.getGoverview());
 		
 		
 		//retrieveGame();

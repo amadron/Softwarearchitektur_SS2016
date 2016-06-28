@@ -32,11 +32,10 @@ public class DAOHibernate implements IDataAccessObject {
             HibernateObject obj = (HibernateObject) object;
             Criteria criteria = session.createCriteria(HibernateObject.class).add(Restrictions.like("id", obj.getId()));
             List crit = criteria.list();
-            if (crit.size() > 0) {
-                update(object);
-            } else {
-                session.save(object);
+            for(Object element : crit) {
+                session.delete(element);
             }
+            session.save(object);
             transact.commit();
             //session.close();
     }
@@ -68,7 +67,11 @@ public class DAOHibernate implements IDataAccessObject {
     public void update(Object object) {
             session = HibernateUtil.getInstance().getCurrentSession();
             transact = session.beginTransaction();
-            session.delete(object);
+            HibernateObject obj = (HibernateObject) object;
+            List result = session.createCriteria(HibernateObject.class).add(Restrictions.like("id", obj.getId())).list();
+            for(Object element : result) {
+                session.delete(element);
+            }
             session.save(object);
             transact.commit();
             //session.close();

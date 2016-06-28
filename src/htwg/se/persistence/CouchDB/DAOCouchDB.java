@@ -113,7 +113,7 @@ public class DAOCouchDB implements IDataAccessObject {
 		if (contains(currentGame.getId())) {
 			updateGameDB(currentGame);
 		} else {
-			create(currentGame);
+			db.create(currentGame);
 		}
 		
 	}

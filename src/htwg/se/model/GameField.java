@@ -27,7 +27,7 @@ public class GameField {
 	
 
 	//############# Persistent
-	private String gameName = "Marco_random";
+	private String gameName = "Marco_dede";
 
 	public String getGameName() {
 		return gameName;
